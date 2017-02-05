@@ -1,13 +1,13 @@
-/**
-	JFlex lexgreiningard�mi byggt � lesgreini fyrir NanoLisp.
-	H�fundur: Snorri Agnarsson, jan�ar 2017
+/*
+	JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
+	Höfundur: Snorri Agnarsson, janúar 2017
 
-	�ennan lesgreini m� ���a og keyra me� skipununum
+	Þennan lesgreini má þýða og keyra með skipununum
 		java -jar JFlex-1.6.0.jar nanolexer.jflex
 		javac NanoLexer.java
-		java NanoLexer inntaksskr� > �ttaksskr�
-	Einnig m� nota forriti� 'make', ef vi�eigandi 'makefile'
-	er til sta�ar:
+		java NanoLexer inntaksskrá > úttaksskrá
+	Einnig má nota forritið 'make', ef viðeigandi 'makefile'
+	er til staðar:
 		make test
  */
 
@@ -22,26 +22,26 @@ import java.io.*;
 
 %{
 
-// Skilgreiningar � t�kum (tokens):
+// Skilgreiningar á tókum (tokens):
 final static int ERROR = -1;
 final static int IF = 1001;
-final static int DEFINE = 1002; // Taka út
-final static int NAME = 1003;
-final static int LITERAL = 1004;
-
-// Bæta við else elsif, while, var o.fl. úr morpho
-
-/* Morpho keywords:
-‘break’ ‘case’ ‘catch’ ‘const’ ‘continue’ ‘default’ ‘else’ ‘elsif’ ‘false’
-‘fibervar’ ‘final’ ‘for’ ‘fun’ ‘if’ ‘in’ ‘machinevar’ ‘msg’ ‘new’ ‘null’
-‘obj’ ‘taskvar’ ‘rec’ ‘return’ ‘seq’ ‘super’ ‘switch’ ‘this’ ‘throw’ ‘true’
-‘try’ ‘val’ ‘var’ ‘while’
-*/
+final static int ELSE = 1002;
+final static int ELSEIF = 1003;
+final static int NAME = 1004;
+final static int LITERAL = 1005;
+final static int FUN = 1006;
+final static int FOR = 1007;
+final static int WHILE = 1008;
+final static int RETURN = 1009;
+final static int OPERATOR = 1010;
+final static int BASIS = 1011;
+final static int VAR = 1012;
+final static int VAL = 1013;
 
 // Breyta sem mun innihalda les (lexeme):
 public static String lexeme;
 
-// �etta keyrir lexgreininn:
+// Þetta keyrir lexgreininn:
 public static void main( String[] args ) throws Exception
 {
 	NanoLexer lexer = new NanoLexer(new FileReader(args[0]));
@@ -64,8 +64,9 @@ _FLOAT={_DIGIT}+\.{_DIGIT}+([eE][+-]?{_DIGIT}+)?
 _INT={_DIGIT}+
 _STRING=\"([^\"\\]|\\b|\\t|\\n|\\f|\\r|\\\"|\\\'|\\\\|(\\[0-3][0-7][0-7])|\\[0-7][0-7]|\\[0-7])*\"
 _CHAR=\'([^\'\\]|\\b|\\t|\\n|\\f|\\r|\\\"|\\\'|\\\\|(\\[0-3][0-7][0-7])|(\\[0-7][0-7])|(\\[0-7]))\'
-_DELIM=[()]
-_NAME=([:letter:]|[\+\-*/!%&=><\:\^\~&|?]|{_DIGIT})+
+_DELIM=([{}]|[()]|[\[\]])
+_NAME=[:letter:]+ ([:letter:]|[\+\-*/!%&=><\:\^\~&|?]|{_DIGIT})*
+_OPERATOR= (\+|\-|\*|\/|\=|\!|\=\=|\!\=|\<|\>|\<\=|\>\=|\&\&|\|\||\+\+|\-\-)
 
 %%
 
@@ -81,14 +82,59 @@ _NAME=([:letter:]|[\+\-*/!%&=><\:\^\~&|?]|{_DIGIT})+
 	return LITERAL;
 }
 
+{_OPERATOR} {
+	lexeme = yytext();
+	return OPERATOR;
+}
+
 "if" {
 	lexeme = yytext();
 	return IF;
 }
 
-"define" {
+"else" {
 	lexeme = yytext();
-	return DEFINE;
+	return ELSE;
+}
+
+"elseif" {
+	lexeme = yytext();
+	return ELSEIF;
+}
+
+"fun" {
+	lexeme = yytext();
+	return FUN;
+}
+
+"for" {
+	lexeme = yytext();
+	return FOR;
+}
+
+"while" {
+	lexeme = yytext();
+	return WHILE;
+}
+
+"return" {
+	lexeme = yytext();
+	return RETURN;
+}
+
+"BASIS" {
+	lexeme = yytext();
+	return BASIS;
+}
+
+"var" {
+	lexeme = yytext();
+	return VAR;
+}
+
+"val" {
+	lexeme = yytext();
+	return VAL;
 }
 
 {_NAME} {
