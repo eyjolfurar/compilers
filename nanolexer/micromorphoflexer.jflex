@@ -29,14 +29,10 @@ final static int ELSE = 1002;
 final static int ELSEIF = 1003;
 final static int NAME = 1004;
 final static int LITERAL = 1005;
-final static int FUN = 1006;
-final static int FOR = 1007;
-final static int WHILE = 1008;
-final static int RETURN = 1009;
-final static int OPERATOR = 1010;
-final static int BASIS = 1011;
-final static int VAR = 1012;
-final static int VAL = 1013;
+final static int WHILE = 1006;
+final static int RETURN = 1007;
+final static int OPERATOR = 1008;
+final static int VAR = 1009;
 
 // Breyta sem mun innihalda les (lexeme):
 public static String lexeme;
@@ -102,16 +98,6 @@ _OPERATOR= (\+|\-|\*|\/|\=|\!|\=\=|\!\=|\<|\>|\<\=|\>\=|\&\&|\|\||\+\+|\-\-)
 	return ELSEIF;
 }
 
-"fun" {
-	lexeme = yytext();
-	return FUN;
-}
-
-"for" {
-	lexeme = yytext();
-	return FOR;
-}
-
 "while" {
 	lexeme = yytext();
 	return WHILE;
@@ -122,19 +108,10 @@ _OPERATOR= (\+|\-|\*|\/|\=|\!|\=\=|\!\=|\<|\>|\<\=|\>\=|\&\&|\|\||\+\+|\-\-)
 	return RETURN;
 }
 
-"BASIS" {
-	lexeme = yytext();
-	return BASIS;
-}
 
 "var" {
 	lexeme = yytext();
 	return VAR;
-}
-
-"val" {
-	lexeme = yytext();
-	return VAL;
 }
 
 {_NAME} {
@@ -142,7 +119,10 @@ _OPERATOR= (\+|\-|\*|\/|\=|\!|\=\=|\!\=|\<|\>|\<\=|\>\=|\&\&|\|\||\+\+|\-\-)
 	return NAME;
 }
 
-";".*$ {
+";;;".*$ {
+}
+
+"{;;;"(.|\r|\n)*";;;}" {
 }
 
 [ \t\r\n\f] {
