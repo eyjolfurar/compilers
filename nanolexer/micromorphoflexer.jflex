@@ -1,15 +1,15 @@
-/*
+/**
 	JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
 	Höfundur: Snorri Agnarsson, janúar 2017
 
 	Þennan lesgreini má þýða og keyra með skipununum
-		java -jar JFlex-1.6.0.jar nanolexer.jflex
+		java -jar JFlex-1.6.1.jar micromorphoflexer.jflex
 		javac NanoLexer.java
 		java NanoLexer inntaksskrá > úttaksskrá
 	Einnig má nota forritið 'make', ef viðeigandi 'makefile'
 	er til staðar:
 		make test
- */
+ **/
 
 import java.io.*;
 
@@ -44,10 +44,13 @@ public static void main( String[] args ) throws Exception
 {
 	NanoLexer lexer = new NanoLexer(new FileReader(args[0]));
 	int token = lexer.yylex();
+	int token2 = lexer.yytext();
 	while( token!=0 )
 	{
 		System.out.println(""+token+": \'"+lexeme+"\'");
 		token = lexer.yylex();
+		token2 = lexer.yytext();
+		System.out.println(""+token+"");
 	}
 }
 
