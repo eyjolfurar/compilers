@@ -3,7 +3,7 @@
 	Höfundur: Snorri Agnarsson, janúar 2017
 
 	Þennan lesgreini má þýða og keyra með skipununum
-		java -jar JFlex-1.6.0.jar nanolexer.jflex
+		java -jar JFlex-1.6.0.jar micromorphoflexer.jflex
 		javac NanoLexer.java
 		java NanoLexer inntaksskrá > úttaksskrá
 	Einnig má nota forritið 'make', ef viðeigandi 'makefile'
@@ -44,10 +44,17 @@ public static void main( String[] args ) throws Exception
 {
 	NanoLexer lexer = new NanoLexer(new FileReader(args[0]));
 	int token = lexer.yylex();
+	//System.out.println("Token: "+token+": \'"+lexer.yytext()+"\'");
+	int token2 = lexer.yylex();
+	//System.out.println("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
+	lexer.yypushback(lexer.yylength());
 	while( token!=0 )
 	{
-		System.out.println(""+token+": \'"+lexeme+"\'");
 		token = lexer.yylex();
+		//System.out.println("Token: "+token+": \'"+lexer.yytext()+"\'");
+		token2 = lexer.yylex();
+		//System.out.println("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
+		lexer.yypushback(lexer.yylength());
 	}
 }
 
