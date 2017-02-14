@@ -43,13 +43,10 @@ public class MicroMorphoParser{
 			function();
 			MicroMorphoFlex.advance();
 		}
-
-		
-	
 	}
 
 	public static void function(){
-		System.out.println(getToken());
+	
 
 	}
 }

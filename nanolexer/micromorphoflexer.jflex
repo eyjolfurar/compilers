@@ -40,31 +40,9 @@ final static int VAR = 1009;
 // Breyta sem mun innihalda les (lexeme):
 public static String lexeme;
 
-// Þetta keyrir lexgreininn:
-/*Public static void main( String[] args ) throws Exception
-{
-
-	NanoLexer lexer = new NanoLexer(new FileReader(args[0]));
-	int token = lexer.yylex();
-	//System.out.println("Token: "+token+": \'"+lexer.yytext()+"\'");
-	int token2 = lexer.yylex();
-	//System.out.println("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
-	
-	lexer.yypushback(lexer.yylength()); 
-	
-	while( token!=0 )
-	{
-		token = lexer.yylex();
-		//System.out.println("Token: "+token+": \'"+lexer.yytext()+"\'");
-		token2 = lexer.yylex();
-		//System.out.println("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
-		lexer.yypushback(lexer.yylength());
-	}
-}*/
-public static int token;
-public static int token2;
-public static MicroMorphoFlex lexer;
-
+private static int token;
+private static int token2;
+private static MicroMorphoFlex lexer;
 
 public static void startLex(String garg) throws Exception{
 	lexer = new MicroMorphoFlex(new FileReader(garg));
@@ -88,7 +66,7 @@ public static void advance() throws Exception {
 			//System.out.println("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
 			lexer.yypushback(lexer.yylength());
 		}
-	
+
 }
 
 public static void over(){
