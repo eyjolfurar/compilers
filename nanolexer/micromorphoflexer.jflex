@@ -5,8 +5,8 @@
 	Þennan lesgreini má þýða og keyra með skipununum
 	
 		java -jar JFlex-1.6.1.jar micromorphoflexer.jflex
-		javac NanoLexer.java
-		java NanoLexer inntaksskrá > úttaksskrá
+		javac MicroMorphoFlex.java
+		java MicroMorphoFlex inntaksskrá > úttaksskrá
 	Einnig má nota forritið 'make', ef viðeigandi 'makefile'
 	er til staðar:
 		make test
@@ -17,7 +17,7 @@ import java.io.*;
 %%
 
 %public
-%class NanoLexer
+%class MicroMorphoFlex
 %unicode
 %byaccj
 %line
@@ -41,15 +41,17 @@ final static int VAR = 1009;
 public static String lexeme;
 
 // Þetta keyrir lexgreininn:
-public static void main( String[] args ) throws Exception
+/*Public static void main( String[] args ) throws Exception
 {
+
 	NanoLexer lexer = new NanoLexer(new FileReader(args[0]));
 	int token = lexer.yylex();
 	//System.out.println("Token: "+token+": \'"+lexer.yytext()+"\'");
 	int token2 = lexer.yylex();
 	//System.out.println("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
-
-	lexer.yypushback(lexer.yylength());
+	
+	lexer.yypushback(lexer.yylength()); 
+	
 	while( token!=0 )
 	{
 		token = lexer.yylex();
@@ -58,6 +60,59 @@ public static void main( String[] args ) throws Exception
 		//System.out.println("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
 		lexer.yypushback(lexer.yylength());
 	}
+}*/
+public static int token;
+public static int token2;
+public static MicroMorphoFlex lexer;
+
+
+public static void startLex(String garg) throws Exception{
+	lexer = new MicroMorphoFlex(new FileReader(garg));
+	
+	token = lexer.yylex();
+	
+	//System.out.println("Token: "+token+": \'"+lexer.yytext()+"\'");
+	
+	token2 = lexer.yylex();
+	//System.out.println("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
+
+	lexer.yypushback(lexer.yylength());	
+}
+
+public static void advance() throws Exception {
+	
+		if( token != 0) {
+			token = lexer.yylex();
+			//System.out.println("Token: "+token+": \'"+lexer.yytext()+"\'");
+			token2 = lexer.yylex();
+			//System.out.println("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
+			lexer.yypushback(lexer.yylength());
+		}
+	
+}
+
+public static void over(){
+
+	//hoppa yfir name og sviga?!
+
+}
+
+public static int getToken(){
+
+	return token;
+
+}
+
+public static int getNextToken(){
+
+	return token2;
+
+}
+
+public static String getLexeme(){
+
+	return lexeme;
+
 }
 
 %}

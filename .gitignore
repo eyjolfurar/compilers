@@ -1,4 +1,6 @@
 *.class
+MicroMorphoFlex.java~
+MicroMorphoFlex.java
 NanoLexer.java
 NanoLexer.java~
 out.txt
