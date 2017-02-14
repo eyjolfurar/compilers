@@ -46,8 +46,14 @@ public class MicroMorphoParser{
 	}
 
 	public static void function(){
-	
+		//pæling hvort þetta eigi að vera einhvernveginn svona? bókað ekki rétt samt
+		/*while(getToken() == NAME && getNextToken == DELIM){
 
+		}
+		if(getToken == DELIM){
+			while
+		}
+		else*/ 
 	}
 }
 //{núll eða fleiri} [optional]
