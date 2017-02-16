@@ -23,7 +23,14 @@ public class MicroMorphoParser{
 	    try
 	    {
 	        MicroMorphoFlex.startLex(args[0]);
-	        program();
+	        //program();
+	        while(getToken() != 0){
+	        	program();
+	        	System.out.println("token 1: " + getToken() + " lex : " + getFirstLexeme() + "");
+	        	System.out.println("token 2: " + getNextToken() + " lex2 : " + getLexeme() + "");
+	        	advance();
+	        	
+	        }
 	    }
 	    catch( Throwable e )
 	    {
@@ -32,29 +39,79 @@ public class MicroMorphoParser{
 	    //generateProgram(args[0],code);
 	}
 	private static int getToken(){
-		
-		return MicroMorphoFlex.getToken();
-		
+		return MicroMorphoFlex.getToken();	
+	}
+	private static int getNextToken(){
+		return MicroMorphoFlex.getNextToken();
+	}
+	private static String getFirstLexeme(){
+		return MicroMorphoFlex.getFirstLex();
+	}
+	private static String getLexeme(){
+		return MicroMorphoFlex.getLexeme();
+	}
+	private static void advance() throws Exception {
+		MicroMorphoFlex.advance();
 	}
 
-	public static void program() throws Exception{
+	public static void program() throws Exception {
 		
-		while(getToken() != 0){
 			function();
-			MicroMorphoFlex.advance();
+			advance();
+
+		System.out.println("suxxxxess");
+	}
+
+	public static void function() throws Exception {
+		//System.out.println("tok: " + getToken());
+		//System.out.println("lex: " + getLexeme());
+		if(getToken() == NAME){
+			advance();
+		
+			if(getFirstLexeme() == "("){
+				advance();
+			
+				while(getToken() == NAME){
+					advance();
+					System.out.println("þetta gerðis");
+					if(getFirstLexeme() == ";"){
+
+						advance();
+					} else { break;	}
+				}
+
+				if(getFirstLexeme() == ")"){
+					advance();
+					if(getFirstLexeme() == "{"){
+						advance();
+						if(getFirstLexeme() == "}"){ advance(); }
+						else if(getToken() == VAR){
+							while(getToken() == VAR){
+								System.out.println("fínt maður");
+								advance();
+								if(getFirstLexeme() == ";" ){
+									advance();
+								} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
+							}
+						}
+						else{
+							while(getToken() != 0 || getFirstLexeme() != "}"){
+								System.out.println("okokok");
+								advance();
+								if(getFirstLexeme() == ";" ){
+									advance();
+								} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
+							}
+
+						}
+						
+					}
+				}
+			}
 		}
 	}
 
-	public static void function(){
-		//pæling hvort þetta eigi að vera einhvernveginn svona? bókað ekki rétt samt
-		/*while(getToken() == NAME && getNextToken == DELIM){
 
-		}
-		if(getToken == DELIM){
-			while
-		}
-		else*/ 
-	}
 }
 //{núll eða fleiri} [optional]
 /*
@@ -77,7 +134,7 @@ binopexpr	=	smallexpr, { OPNAME, smallexpr }
 			;
 
 smallexpr	=	NAME
-			|	NAME, '(', [ expr, { ',', expr } ], ')'
+			|	NAME, '(', [ expr, { ',', expr } ], ')' //hvað er þetta?
 			|	OPNAME, smallexpr
 			| 	LITERAL 
 			|	'(', expr, ')'

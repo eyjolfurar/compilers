@@ -38,7 +38,8 @@ final static int OPERATOR = 1008;
 final static int VAR = 1009;
 
 // Breyta sem mun innihalda les (lexeme):
-public static String lexeme;
+private static String first_lexeme;
+private static String lexeme;
 
 private static int token;
 private static int token2;
@@ -48,23 +49,25 @@ public static void startLex(String garg) throws Exception{
 	lexer = new MicroMorphoFlex(new FileReader(garg));
 	
 	token = lexer.yylex();
-	
-	//System.out.println("Token: "+token+": \'"+lexer.yytext()+"\'");
-	
-	token2 = lexer.yylex();
-	//System.out.println("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
+	first_lexeme = lexer.yytext();
 
-	lexer.yypushback(lexer.yylength());	
+	token2 = lexer.yylex();
+	//System.out.println("Token 1: "+token+" : "+first_lexeme+"");
+	//System.out.pritln("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
+	lexer.yypushback(lexer.yylength());
+
 }
 
 public static void advance() throws Exception {
 	
 		if( token != 0) {
-			token = lexer.yylex();
-			//System.out.println("Token: "+token+": \'"+lexer.yytext()+"\'");
+			
+			token = lexer.yylex();			
+			first_lexeme = lexer.yytext();
 			token2 = lexer.yylex();
-			//System.out.println("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
 			lexer.yypushback(lexer.yylength());
+			//System.out.println("Token 1: "+token+": \'"+ first_lexeme +"\'");
+			//System.out.println("Token 2: "+token2+": \'"+ lexeme +"\'");
 		}
 
 }
@@ -85,6 +88,10 @@ public static int getNextToken(){
 
 	return token2;
 
+}
+
+public static String getFirstLex(){
+	return first_lexeme;
 }
 
 public static String getLexeme(){
@@ -113,7 +120,7 @@ _OPERATOR= [\+\-*/!%&=><\:\^\~&|?]+
   /* Lesgreiningarreglur */
 
 {_DELIM} {
-	lexeme = yytext();
+	lexeme = yytext();		
 	return yycharat(0);
 }
 
@@ -152,7 +159,7 @@ _OPERATOR= [\+\-*/!%&=><\:\^\~&|?]+
 	return RETURN;
 }
 
-"var" {
+"VAR" {
 	lexeme = yytext();
 	return VAR;
 }
