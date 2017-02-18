@@ -1,24 +1,27 @@
-/*
+/**
 	JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
 	Höfundur: Snorri Agnarsson, janúar 2017
 
 	Þennan lesgreini má þýða og keyra með skipununum
-		java -jar JFlex-1.6.0.jar nanolexer.jflex
-		javac NanoLexer.java
-		java NanoLexer inntaksskrá > úttaksskrá
+	
+		java -jar JFlex-1.6.1.jar micromorphoflexer.jflex
+		javac MicroMorphoFlex.java
+		java MicroMorphoFlex inntaksskrá > úttaksskrá
 	Einnig má nota forritið 'make', ef viðeigandi 'makefile'
 	er til staðar:
 		make test
- */
+ **/
 
 import java.io.*;
 
 %%
 
 %public
-%class NanoLexer
+%class MicroMorphoFlex
 %unicode
 %byaccj
+%line
+%column
 
 %{
 
@@ -35,23 +38,67 @@ final static int OPERATOR = 1008;
 final static int VAR = 1009;
 
 // Breyta sem mun innihalda les (lexeme):
-public static String lexeme;
+private static String first_lexeme;
+private static String lexeme;
 
-// Þetta keyrir lexgreininn:
-public static void main( String[] args ) throws Exception
-{
-	NanoLexer lexer = new NanoLexer(new FileReader(args[0]));
-	int token = lexer.yylex();
-	int token2;
-	while( token!=0 )
-	{
-		System.out.println("Fyrsti:" + ""+token+": \'"+lexeme+"\'");
-		token = lexer.yylex();
-		System.out.println("Annar:" + token);
-		token2 = lexer.yylex();
-		lexer.yypushback(0);
-		System.out.println("Thridji:" + token2);
-	}
+private static int token;
+private static int token2;
+private static MicroMorphoFlex lexer;
+
+public static void startLex(String garg) throws Exception{
+	lexer = new MicroMorphoFlex(new FileReader(garg));
+	
+	token = lexer.yylex();
+	first_lexeme = lexer.yytext();
+
+	token2 = lexer.yylex();
+	//System.out.println("Token 1: "+token+" : "+first_lexeme+"");
+	//System.out.pritln("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
+	lexer.yypushback(lexer.yylength());
+
+}
+
+public static void advance() throws Exception {
+	
+		if( token != 0) {
+			
+			token = lexer.yylex();			
+			first_lexeme = lexer.yytext();
+			token2 = lexer.yylex();
+			lexer.yypushback(lexer.yylength());
+			//System.out.println("Token 1: "+token+": \'"+ first_lexeme +"\'");
+			//System.out.println("Token 2: "+token2+": \'"+ lexeme +"\'");
+		}
+
+}
+
+public static void over(){
+
+	//hoppa yfir name og sviga?!
+
+}
+
+public static int getToken(){
+
+	return token;
+
+}
+
+public static int getNextToken(){
+
+	return token2;
+
+}
+
+public static String getFirstLex(){
+	return first_lexeme;
+}
+
+public static String getLexeme(){
+
+	return lexeme;
+
+
 }
 
 %}
@@ -65,16 +112,16 @@ _FLOAT={_DIGIT}+\.{_DIGIT}+([eE][+-]?{_DIGIT}+)?
 _INT={_DIGIT}+
 _STRING=\"([^\"\\]|\\b|\\t|\\n|\\f|\\r|\\\"|\\\'|\\\\|(\\[0-3][0-7][0-7])|\\[0-7][0-7]|\\[0-7])*\"
 _CHAR=\'([^\'\\]|\\b|\\t|\\n|\\f|\\r|\\\"|\\\'|\\\\|(\\[0-3][0-7][0-7])|(\\[0-7][0-7])|(\\[0-7]))\'
-_DELIM=([{}]|[()]|[\[\]])
-_NAME=[:letter:]+ ([:letter:]|[\+\-*/!%&=><\:\^\~&|?]|{_DIGIT})*
-_OPERATOR= (\+|\-|\*|\/|\=|\!|\=\=|\!\=|\<|\>|\<\=|\>\=|\&\&|\|\||\+\+|\-\-)
+_DELIM=[{}(),;=]
+_NAME=[:letter:]+ ([:letter:]|{_DIGIT})*
+_OPERATOR= [\+\-*/!%&=><\:\^\~&|?]+
 
 %%
 
   /* Lesgreiningarreglur */
 
 {_DELIM} {
-	lexeme = yytext();
+	lexeme = yytext();		
 	return yycharat(0);
 }
 
@@ -113,8 +160,7 @@ _OPERATOR= (\+|\-|\*|\/|\=|\!|\=\=|\!\=|\<|\>|\<\=|\>\=|\&\&|\|\||\+\+|\-\-)
 	return RETURN;
 }
 
-
-"var" {
+"VAR" {
 	lexeme = yytext();
 	return VAR;
 }
@@ -127,8 +173,10 @@ _OPERATOR= (\+|\-|\*|\/|\=|\!|\=\=|\!\=|\<|\>|\<\=|\>\=|\&\&|\|\||\+\+|\-\-)
 ";;;".*$ {
 }
 
+/* Étur of mikið.
 "{;;;"(.|\r|\n)*";;;}" {
 }
+*/
 
 [ \t\r\n\f] {
 }
