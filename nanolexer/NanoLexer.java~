@@ -440,10 +440,15 @@ public static void main( String[] args ) throws Exception
 {
 	NanoLexer lexer = new NanoLexer(new FileReader(args[0]));
 	int token = lexer.yylex();
+	int token2;
 	while( token!=0 )
 	{
-		System.out.println(""+token+": \'"+lexeme+"\'");
+		System.out.println("Fyrsti:" + ""+token+": \'"+lexeme+"\'");
 		token = lexer.yylex();
+		System.out.println("Annar:" + token);
+		token2 = lexer.yylex();
+		lexer.yypushback(0);
+		System.out.println("Þriðji:" + token2);
 	}
 }
 

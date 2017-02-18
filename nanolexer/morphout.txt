@@ -1,165 +1,246 @@
-123: '{'
-1004: 'asdfasdfa'
-1005: '"fibo.mexe"'
-1008: '='
-1004: 'main'
-1004: 'in'
-123: '{'
-123: '{'
-1004: 'main'
-1008: '='
-1004: 'fun'
-40: '('
-41: ')'
-123: '{'
-1004: 'writeln'
-40: '('
-1005: '"fibo(10)="'
-1008: '++'
-1004: 'fibo'
-40: '('
-1005: '10'
-41: ')'
-41: ')'
--1: ';'
-125: '}'
--1: ';'
-125: '}'
-125: '}'
-1008: '*'
-1008: '!'
-123: '{'
-123: '{'
-1004: 'fibo'
-1008: '='
-1004: 'fun'
-40: '('
-1004: 'n'
-41: ')'
-123: '{'
-1001: 'if'
-40: '('
-1004: 'n<=2'
-41: ')'
-123: '{'
-1007: 'return'
-1005: 'null'
--1: ';'
-125: '}'
-1002: 'else'
-123: '{'
-1007: 'return'
-1004: 'fibo'
-40: '('
-1004: 'n-1'
-41: ')'
-1008: '+'
-1004: 'fibo'
-40: '('
-1004: 'n-2'
-41: ')'
--1: ';'
-125: '}'
--1: ';'
-125: '}'
--1: ';'
-125: '}'
-125: '}'
-1008: '*'
-1004: 'BASIS'
--1: ';'
-91: '['
-93: ']'
--1: '$'
--1: '#'
--1: '.'
--1: ','
-1004: 'Ã'
--1: '¾'
-1004: 'Ã'
--1: '¦'
-1004: 'Ã'
--1: '¶'
-1004: 'Ã'
--1: '°'
-1004: 'ÃžÃ'
--1: '†'
-1004: 'Ã'
--1: '–'
-1004: 'Ã'
--1: '?'
-1004: 'Ã'
--1: '¡'
-1004: 'Ã'
--1: '©'
-1004: 'Ã'
--1: '­'
-1004: 'Ã'
--1: '³'
-1004: 'ÃºÃ'
--1: '½'
-1004: 'Ã'
--1: '?'
-1004: 'Ã'
--1: '‰'
-1004: 'Ã'
--1: '?'
-1004: 'Ã'
--1: '“'
-1004: 'ÃšÃ'
--1: '?'
--1: '''
--1: '''
--1: '''
--1: '''
-1004: 'xx'
--1: '''
-1005: ''x''
-1008: '!'
--1: '%'
--1: '&'
-1008: '/'
-1008: '='
-1008: '-'
--1: '?'
--1: '^'
-1008: '+'
-1008: '*'
--1: '~'
-1008: '<'
-1008: '>'
--1: '|'
--1: '`'
-1004: 'Â'
--1: '´'
-1004: 'â'
--1: '‚'
--1: '¬'
-1004: 'Ã'
--1: '¤'
-1004: 'Ã'
--1: '¿'
-1004: 'Ã'
--1: '¥'
-1004: 'Ã'
--1: '„'
-1004: 'Ã'
--1: '¼'
-1004: 'Ãœ'
-1004: 'Ã'
--1: ' '
-1004: 'ÂµLisp'
-1005: ''\\''
-1005: '"\r\n"'
--1: '''
--1: '\'
-1004: 'r'
--1: '\'
-1004: 'n'
--1: '''
-1005: ''\013''
-1005: ''\f''
-1005: ''\'''
--1: '''
--1: '''
--1: '''
+Fyrsti:1005: '"fibo.mexe"'
+Annar:1008
+Thridji:1004
+Fyrsti:1008: 'main'
+Annar:1004
+Thridji:123
+Fyrsti:1004: '{'
+Annar:123
+Thridji:1004
+Fyrsti:123: 'main'
+Annar:1008
+Thridji:1004
+Fyrsti:1008: 'fun'
+Annar:40
+Thridji:41
+Fyrsti:40: ')'
+Annar:123
+Thridji:1004
+Fyrsti:123: 'writeln'
+Annar:40
+Thridji:1005
+Fyrsti:40: '"fibo(10)="'
+Annar:1008
+Thridji:1004
+Fyrsti:1008: 'fibo'
+Annar:40
+Thridji:1005
+Fyrsti:40: '10'
+Annar:41
+Thridji:41
+Fyrsti:41: ')'
+Annar:-1
+Thridji:125
+Fyrsti:-1: '}'
+Annar:-1
+Thridji:125
+Fyrsti:-1: '}'
+Annar:125
+Thridji:1008
+Fyrsti:125: '*'
+Annar:1008
+Thridji:123
+Fyrsti:1008: '{'
+Annar:123
+Thridji:1004
+Fyrsti:123: 'fibo'
+Annar:1008
+Thridji:1004
+Fyrsti:1008: 'fun'
+Annar:40
+Thridji:1004
+Fyrsti:40: 'n'
+Annar:41
+Thridji:123
+Fyrsti:41: '{'
+Annar:1001
+Thridji:40
+Fyrsti:1001: '('
+Annar:1004
+Thridji:41
+Fyrsti:1004: ')'
+Annar:123
+Thridji:1007
+Fyrsti:123: 'return'
+Annar:1005
+Thridji:-1
+Fyrsti:1005: ';'
+Annar:125
+Thridji:1002
+Fyrsti:125: 'else'
+Annar:123
+Thridji:1007
+Fyrsti:123: 'return'
+Annar:1004
+Thridji:40
+Fyrsti:1004: '('
+Annar:1004
+Thridji:41
+Fyrsti:1004: ')'
+Annar:1008
+Thridji:1004
+Fyrsti:1008: 'fibo'
+Annar:40
+Thridji:1004
+Fyrsti:40: 'n-2'
+Annar:41
+Thridji:-1
+Fyrsti:41: ';'
+Annar:125
+Thridji:-1
+Fyrsti:125: ';'
+Annar:125
+Thridji:-1
+Fyrsti:125: ';'
+Annar:125
+Thridji:125
+Fyrsti:125: '}'
+Annar:1008
+Thridji:1004
+Fyrsti:1008: 'BASIS'
+Annar:-1
+Thridji:91
+Fyrsti:-1: '['
+Annar:93
+Thridji:-1
+Fyrsti:93: '$'
+Annar:-1
+Thridji:-1
+Fyrsti:-1: '.'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'ÃžÃ'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'ÃºÃ'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'ÃšÃ'
+Annar:-1
+Thridji:-1
+Fyrsti:-1: '''
+Annar:-1
+Thridji:-1
+Fyrsti:-1: '''
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'xx'
+Annar:-1
+Thridji:1005
+Fyrsti:-1: ''x''
+Annar:1008
+Thridji:-1
+Fyrsti:1008: '%'
+Annar:-1
+Thridji:1008
+Fyrsti:-1: '/'
+Annar:1008
+Thridji:1008
+Fyrsti:1008: '-'
+Annar:-1
+Thridji:-1
+Fyrsti:-1: '^'
+Annar:1008
+Thridji:1008
+Fyrsti:1008: '*'
+Annar:-1
+Thridji:1008
+Fyrsti:-1: '<'
+Annar:1008
+Thridji:-1
+Fyrsti:1008: '|'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'Â'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'â'
+Annar:-1
+Thridji:-1
+Fyrsti:-1: '¬'
+Annar:1004
+Thridji:-1
+Fyrsti:1004: '¤'
+Annar:1004
+Thridji:-1
+Fyrsti:1004: '¿'
+Annar:1004
+Thridji:-1
+Fyrsti:1004: '¥'
+Annar:1004
+Thridji:-1
+Fyrsti:1004: '„'
+Annar:1004
+Thridji:-1
+Fyrsti:1004: '¼'
+Annar:1004
+Thridji:1004
+Fyrsti:1004: 'Ã'
+Annar:-1
+Thridji:1004
+Fyrsti:-1: 'ÂµLisp'
+Annar:1005
+Thridji:1005
+Fyrsti:1005: '"\r\n"'
+Annar:-1
+Thridji:-1
+Fyrsti:-1: '\'
+Annar:1004
+Thridji:-1
+Fyrsti:1004: '\'
+Annar:1004
+Thridji:-1
+Fyrsti:1004: '''
+Annar:1005
+Thridji:1005
+Fyrsti:1005: ''\f''
+Annar:1005
+Thridji:-1
+Fyrsti:1005: '''
+Annar:-1
+Thridji:-1
+Fyrsti:-1: '''
+Annar:0
+Thridji:0
