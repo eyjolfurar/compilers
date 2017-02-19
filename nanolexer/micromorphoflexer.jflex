@@ -5,7 +5,7 @@
 	Þennan lesgreini má þýða og keyra með skipununum
 	
 		java -jar JFlex-1.6.1.jar micromorphoflexer.jflex
-		javac MicroMorphoFlex.java
+		javac MicroMorphoFlex.java MicroMorphoParser.java
 		java MicroMorphoFlex inntaksskrá > úttaksskrá
 	Einnig má nota forritið 'make', ef viðeigandi 'makefile'
 	er til staðar:

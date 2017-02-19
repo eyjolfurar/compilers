@@ -88,6 +88,8 @@ public class MicroMorphoParser{
 							if(getFirstLexeme().equals("}")){ advance(); }
 							else if(getToken() == VAR){
 								while(getToken() == VAR){
+			//ATH eyjó hérna er kallað á decl!! 
+									//decl(); <-------- hér
 									System.out.println("fínt maður");
 									advance();
 									if(getFirstLexeme().equals(";")){
@@ -108,6 +110,20 @@ public class MicroMorphoParser{
 			}
 		}
 	}
+	//Vinnusvæði Matta ætla að henda í expr fallið
+	public static void expr() throws Exception {
+
+	}
+
+
+
+
+
+	//Vinnusvæði Eyjó 
+
+
+
+
 
 
 }
