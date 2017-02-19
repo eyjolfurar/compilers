@@ -57,9 +57,9 @@ public class MicroMorphoParser{
 
 	public static void program() throws Exception {
 
-			function();
-
-		System.out.println("suxxxxess");
+			while (getToken() != 0) {
+				function();
+			}
 	}
 
 
@@ -205,7 +205,7 @@ public class MicroMorphoParser{
 		else if(getToken()==NAME && getLexeme().equals('(')){
 			advance();
 			advance();
-			if(!getFirstLexeme().equals(")") {
+			if(!getFirstLexeme().equals(")")) {
 				expr();
 				while(!getFirstLexeme().equals(")")){
 					if(getFirstLexeme().equals(',')){
