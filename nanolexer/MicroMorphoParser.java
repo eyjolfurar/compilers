@@ -89,7 +89,7 @@ public class MicroMorphoParser{
 							else if(getToken() == VAR){
 								while(getToken() == VAR){
 			//ATH eyjó hérna er kallað á decl!!
-									//decl(); <-------- hér
+									decl();
 									System.out.println("fínt maður");
 									
 									if(getFirstLexeme().equals(";")){
@@ -119,7 +119,7 @@ public class MicroMorphoParser{
 		}
 		else if(getToken() == NAME){
 			advance();
-			if(getFirstLexeme().equals("="){
+			if(getFirstLexeme().equals("=")){
 				advance();
 				expr();
 			}
@@ -132,7 +132,7 @@ public class MicroMorphoParser{
 	public static void binopexpr() throws Exception {
 		smallexpr();
 		advance();
-		while(getToken == OPERATOR){
+		while(getToken() == OPERATOR){
 			advance();
 			smallexpr();
 		}
@@ -140,7 +140,7 @@ public class MicroMorphoParser{
 	}
 
 	public static void smallexpr() throws Exception {
-		System.out.println("Nei vá þér gengur bara ágætlega!")
+		System.out.println("Nei vá þér gengur bara ágætlega!");
 		advance();
 	}
 
@@ -152,12 +152,12 @@ public class MicroMorphoParser{
 	//Vinnusvæði Eyjó
 
 	public static void decl() throws Exception {
-		if (getFirstLexeme().equals("var") && getNextToken() == 1004) {
+		if (getToken() == VAR && getNextToken() == NAME) {
 			advance();
 			advance();
-			while(!getFirstLexeme().equals(';')) {
-				if(getFirstLexeme().equals(',') && getNextToken() == 1004) {
-					advance();
+			while(getFirstLexeme().equals(',')) {
+				advance();
+				if(getNextToken() == NAME){
 					advance();
 				}
 				else {
