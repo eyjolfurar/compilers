@@ -89,8 +89,9 @@ public class MicroMorphoParser{
 							else if(getToken() == VAR){
 								while(getToken() == VAR){
 			//ATH eyjó hérna er kallað á decl!!
+
 									decl();
-									System.out.println("fínt maður");
+									
 									
 									if(getFirstLexeme().equals(";")){
 										advance();
@@ -152,9 +153,11 @@ public class MicroMorphoParser{
 	//Vinnusvæði Eyjó
 
 	public static void decl() throws Exception {
+		System.out.println(getToken() + " : " + getLexeme() + " next: "+ getNextToken());
 		if (getToken() == VAR && getNextToken() == NAME) {
 			advance();
 			advance();
+			System.out.println("eg virka" + getToken());
 			while(getFirstLexeme().equals(',')) {
 				advance();
 				if(getNextToken() == NAME){
@@ -168,6 +171,7 @@ public class MicroMorphoParser{
 		else {
 			// THrow Exception
 		}
+		System.out.println(getToken() + " next2: "+ getNextToken());
 	}
 
 
