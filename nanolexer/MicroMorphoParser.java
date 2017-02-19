@@ -28,9 +28,9 @@ public class MicroMorphoParser{
 	        	System.out.println("token 1: " + getToken() + " lex : " + getFirstLexeme() + "");
 	        	System.out.println("token 2: " + getNextToken() + " lex2 : " + getLexeme() + "");
 	        	program();
-	        	
+
 	        	advance();
-	        	
+
 	        }
 	    }
 	    catch( Throwable e )
@@ -40,7 +40,7 @@ public class MicroMorphoParser{
 	    //generateProgram(args[0],code);
 	}
 	private static int getToken(){
-		return MicroMorphoFlex.getToken();	
+		return MicroMorphoFlex.getToken();
 	}
 	private static int getNextToken(){
 		return MicroMorphoFlex.getNextToken();
@@ -56,7 +56,7 @@ public class MicroMorphoParser{
 	}
 
 	public static void program() throws Exception {
-		
+
 			function();
 
 		System.out.println("suxxxxess");
@@ -72,7 +72,7 @@ public class MicroMorphoParser{
 				advance();
 				while(getToken() == NAME){
 					advance();
-					
+
 					if(getFirstLexeme().equals(",")){
 						System.out.println(getToken());
 						advance();
@@ -88,7 +88,7 @@ public class MicroMorphoParser{
 							if(getFirstLexeme().equals("}")){ advance(); }
 							else if(getToken() == VAR){
 								while(getToken() == VAR){
-			//ATH eyjó hérna er kallað á decl!! 
+			//ATH eyjó hérna er kallað á decl!!
 									//decl(); <-------- hér
 									System.out.println("fínt maður");
 									
@@ -104,7 +104,7 @@ public class MicroMorphoParser{
 								if(getFirstLexeme().equals(";")){
 									advance();
 								} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
-							}	
+							}
 						}
 					}
 				}
@@ -149,9 +149,26 @@ public class MicroMorphoParser{
 
 
 
-	//Vinnusvæði Eyjó 
+	//Vinnusvæði Eyjó
 
-
+	public static void decl() throws Exception {
+		if (getFirstLexeme().equals("var") && getNextToken() == 1004) {
+			advance();
+			advance();
+			while(!getFirstLexeme().equals(';')) {
+				if(getFirstLexeme().equals(',') && getNextToken() == 1004) {
+					advance();
+					advance();
+				}
+				else {
+					// Throw Exception
+				}
+			}
+		}
+		else {
+			// THrow Exception
+		}
+	}
 
 
 
@@ -180,7 +197,7 @@ binopexpr	=	smallexpr, { OPNAME, smallexpr }
 smallexpr	=	NAME
 			|	NAME, '(', [ expr, { ',', expr } ], ')' //hvað er þetta?
 			|	OPNAME, smallexpr
-			| 	LITERAL 
+			| 	LITERAL
 			|	'(', expr, ')'
 			|	'if', expr, body, { 'elsif', expr, body }, [ 'else', body ]
 			|	'while', expr, body
