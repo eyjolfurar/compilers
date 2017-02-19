@@ -83,22 +83,22 @@ public class MicroMorphoParser{
 					if (getFirstLexeme() == "{") {
 						advance();
 					}
-					while (getFirstLexeme().equals("var")) {
+					while (getToken() == VAR) {
 						decl();
 						if (getFirstLexeme().equals(";")) {
 							advance();
 						}
 						else {
-							// THrow error
+							throw new Error("ekki í lagi 1");
 						}
 					}
-					while (!getFirstLexeme().equals("}")) {
+					while (getToken() != 0) {
 						expr();
 						if (getFirstLexeme().equals(";")) {
 							advance();
 						}
 						else {
-							// THrow Exception
+							throw new Error("ekki í lagi 2");
 						}
 					}
 					if (getFirstLexeme().equals('}')) {
@@ -106,18 +106,18 @@ public class MicroMorphoParser{
 						advance();
 					}
 					else {
-						// Throw Exception
+						throw new Error("ekki í lagi 3");
 					}
 				}
 
 				advance();
 			}
 			else {
-				// Throw Exception
+				throw new Error("ekki í lagi 4");
 			}
 		}
 		else {
-			// Throw Exception
+			throw new Error("ekki í lagi 5");
 		}
 	}
 
@@ -175,6 +175,7 @@ public class MicroMorphoParser{
 		if(getToken() == RETURN){
 			advance();
 			expr();
+			System.out.println("hérna maður");
 		}
 		else if(getToken() == NAME){
 			advance();
