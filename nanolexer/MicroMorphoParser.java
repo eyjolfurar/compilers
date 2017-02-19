@@ -94,7 +94,7 @@ public class MicroMorphoParser{
 				}
 				while (getToken() == NAME || getToken() == OPNAME || getToken() == LITERAL
 								|| getFirstLexeme().equals("return") || getFirstLexeme().equals("(")
-				 				|| getFirstLexeme().equals("if") || getLexeme().equals("while")) {
+				 				|| getFirstLexeme().equals("if") || getFirstLexeme().equals("while")) {
 					expr();
 					if (getFirstLexeme().equals(";")) {
 						advance();
