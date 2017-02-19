@@ -64,7 +64,6 @@ public class MicroMorphoParser{
 
 
 	public static void function() throws Exception {
-		System.out.println("tok1: " + getToken() + " lex1: " + getFirstLexeme());
 		if (getToken() == NAME) {
 			advance();
 			if (getFirstLexeme().equals("(")) {
@@ -76,10 +75,8 @@ public class MicroMorphoParser{
 						advance();
 					}
 				}
-				System.out.println("tok: " + getToken() + " lex: " + getFirstLexeme());
 				if (getFirstLexeme().equals(")")) {
 					advance();
-					System.out.println("HAE!");
 					if (getFirstLexeme().equals("{")) {
 						advance();
 					}
@@ -93,7 +90,6 @@ public class MicroMorphoParser{
 						}
 					}
 					while (!getFirstLexeme().equals("}")) {
-						System.out.println("kallad a expr  "+ getFirstLexeme());
 						expr();
 						if (getFirstLexeme().equals(";")) {
 							advance();
@@ -118,66 +114,13 @@ public class MicroMorphoParser{
 		}
 	}
 
-	/*public static void function() throws Exception {
-		//System.out.println("tok: " + getToken());
-		//System.out.println("lex: " + getLexeme());
-		if(getToken() == NAME){
-			advance();
-			System.out.println(getToken());
-			if(getFirstLexeme().equals("(")){
-				advance();
-				while(getToken() == NAME){
-					advance();
-
-					if(getFirstLexeme().equals(",")){
-						System.out.println(getToken());
-						advance();
-					} else { break;	}
-				}
-				System.out.println(getToken() + " " + getFirstLexeme());
-				if(getFirstLexeme().equals(")")){
-					advance();
-					if(getFirstLexeme().equals("{")){
-						advance();
-						System.out.println(getToken() + " " + getFirstLexeme());
-						while(getToken() != 0){
-							if(getFirstLexeme().equals("}")){ advance(); }
-							else if(getToken() == VAR){
-								while(getToken() == VAR){
-			//ATH eyjó hérna er kallað á decl!!
-
-									decl();
-
-									if(getFirstLexeme().equals(";")){
-										advance();
-									} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
-								}
-							}
-							else if(getToken() != 0){
-								System.out.println("okokok");
-								expr();
-
-								if(getFirstLexeme().equals(";")){
-									advance();
-								} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
-							}
-						}
-					}
-				}
-			}
-		}
-	}*/
-	//Vinnusvæði Matta ætla að henda í expr fallið
 	public static void expr() throws Exception {
-		System.out.println("jaaaaajaaa lex: "+getFirstLexeme());
 		if(getToken() == RETURN){
 			advance();
 			expr();
-			System.out.println("hérna maður");
 		}
 		else if(getToken() == NAME){
 			advance();
-			System.out.println("i lagi");
 			if(getFirstLexeme().equals("=")){
 				advance();
 
@@ -194,7 +137,6 @@ public class MicroMorphoParser{
 
 	public static void binopexpr() throws Exception {
 		smallexpr();
-		System.out.println("tok: "+getToken()+" lex: "+getFirstLexeme() );
 		while(getToken() == OPERATOR){
 			advance();
 			smallexpr();
@@ -206,7 +148,7 @@ public class MicroMorphoParser{
 		if(getToken()==NAME){
 			advance();
 		}
-		else if(getToken()==NAME && getLexeme().equals("("){
+		else if(getToken()==NAME && getLexeme().equals("(")){
 			advance();
 			advance();
 			if(!getFirstLexeme().equals(")")) {
@@ -229,7 +171,6 @@ public class MicroMorphoParser{
 			smallexpr();
 		}
 		else if(getToken()==LITERAL){
-			System.out.println("hmmmm " + getFirstLexeme());
 			advance();
 		}
 		else if(getFirstLexeme().equals("(")){
@@ -270,12 +211,6 @@ public class MicroMorphoParser{
 	}
 
 
-
-
-
-
-	//Vinnusvæði Eyjó
-
 	public static void decl() throws Exception {
 
 		if (getToken() == VAR && getNextToken() == NAME) {
@@ -295,14 +230,12 @@ public class MicroMorphoParser{
 		else {
 			// THrow Exception
 		}
-		System.out.println(getToken() + " next2: "+ getNextToken());
 	}
 
 	public static void body() throws Exception {
 		if (getFirstLexeme().equals("{")) {
 			while (!getFirstLexeme().equals("}")) {
 				expr();
-				System.out.print("Expression í body búin!");
 				if (getFirstLexeme().equals(";")) {
 					advance();
 				}
@@ -311,7 +244,6 @@ public class MicroMorphoParser{
 				}
 			}
 			advance();
-			System.out.println("Body búið!");
 		}
 		else {
 			// Throw Exception
