@@ -91,7 +91,7 @@ public class MicroMorphoParser{
 			//ATH eyjó hérna er kallað á decl!! 
 									//decl(); <-------- hér
 									System.out.println("fínt maður");
-									advance();
+									
 									if(getFirstLexeme().equals(";")){
 										advance();
 									} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
@@ -99,7 +99,8 @@ public class MicroMorphoParser{
 							}
 							else if(getToken() != 0){
 								System.out.println("okokok");
-								advance();
+								expr();
+								
 								if(getFirstLexeme().equals(";")){
 									advance();
 								} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
@@ -112,8 +113,37 @@ public class MicroMorphoParser{
 	}
 	//Vinnusvæði Matta ætla að henda í expr fallið
 	public static void expr() throws Exception {
+		if(getToken() == RETURN){
+			advance();
+			expr();
+		}
+		else if(getToken() == NAME){
+			advance();
+			if(getFirstLexeme().equals("="){
+				advance();
+				expr();
+			}
+		}
+		else{
+			binopexpr();
+		}
+	}
+
+	public static void binopexpr() throws Exception {
+		smallexpr();
+		advance();
+		while(getToken == OPERATOR){
+			advance();
+			smallexpr();
+		}
 
 	}
+
+	public static void smallexpr() throws Exception {
+		System.out.println("Nei vá þér gengur bara ágætlega!")
+		advance();
+	}
+
 
 
 
