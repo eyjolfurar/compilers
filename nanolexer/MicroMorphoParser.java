@@ -62,7 +62,9 @@ public class MicroMorphoParser{
 		System.out.println("suxxxxess");
 	}
 
+
 	public static void altFunction() throws Exception {
+
 		if (getToken() == NAME) {
 			advance();
 			if (getFirstLexeme().equals("(")) {
@@ -74,36 +76,38 @@ public class MicroMorphoParser{
 						advance();
 					}
 				}
-			}
-			else {
-				// Throw Exception
-			}
-			if (getFirstLexeme().equals(")") {
-				advance();
-				if (getFirstLexeme().equals("{")) {
+				if (getFirstLexeme() == ")") {
 					advance();
-				}
-				else {
-					// Throw Exception
-				}
-				while (getFirstLexeme().equals("var")) {
-					decl();
-					if (getFirstLexeme().equals(";")) {
+					if (getFirstLexeme() == "{") {
+						advance();
+					}
+					while (getFirstLexeme().equals("var")) {
+						decl();
+						if (getFirstLexeme().equals(";")) {
+							advance();
+						}
+						else {
+							// THrow error
+						}
+					}
+					while (!getFirstLexeme().equals("}")) {
+						expr();
+						if (getFirstLexeme().equals(";")) {
+							advance();
+						}
+						else {
+							// THrow Exception
+						}
+					}
+					if (getFirstLexeme().equals('}')) {
+
 						advance();
 					}
 					else {
-						// THrow Exception
+						// Throw Exception
 					}
 				}
-				while (!getFirstLexeme().equals('}')) {
-					expr();
-					if (getFirstLexeme().equals(";")) {
-						advance();
-					}
-					else {
-						// THrow Exception
-					}
-				}
+
 				advance();
 			}
 			else {
@@ -193,8 +197,63 @@ public class MicroMorphoParser{
 	}
 
 	public static void smallexpr() throws Exception {
-		System.out.println("Nei vá þér gengur bara ágætlega!");
-		advance();
+		if(getToken()==NAME){
+			advance();
+		}
+		else if(getToken()==NAME && getLexeme().equals('(')){
+			advance();
+			advance();
+			while(!getFirstLexeme().equals("")){
+				expr();
+				if(getLexeme().equals(',')){
+					advance();
+				}
+			}
+		}
+		else if(getToken()==OPERATOR){
+			advance();
+			smallexpr();
+
+		}
+		else if(getToken()==LITERAL){
+			advance();
+		}
+		else if(getFirstLexeme().equals('(')){
+			advance();
+			expr();
+			if(getFirstLexeme().equals(')')){
+				advance();
+			}
+			else {
+				//Throw Exception;
+			}
+
+		}
+		else if(getToken()==IF){
+			advance();
+			expr();
+			body();
+			while(getNextToken()==ELSEIF){
+				advance();
+				expr();
+				body();
+			}
+			if(getNextToken()==ELSE){
+				advance();
+				body();
+			}
+			else{
+				//Throw Exception
+			}
+		}
+		else if(getToken()==WHILE){
+			advance();
+			expr();
+			body();
+		}
+		else {
+			// Throw Exception
+		}
 	}
 
 
