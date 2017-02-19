@@ -89,7 +89,7 @@ public class MicroMorphoParser{
 							advance();
 						}
 						else {
-							throw new Error("ekki í lagi 1");
+							throw new Error("ekki i lagi 1 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 						}
 					}
 					while (!getFirstLexeme().equals('}')) {
@@ -98,21 +98,21 @@ public class MicroMorphoParser{
 							advance();
 						}
 						else {
-							throw new Error("ekki í lagi 2");
+							throw new Error("ekki i lagi 2 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 						}
 					}
 					advance();
 				}
 				else {
-					throw new Error("ekki í lagi 3");
+					throw new Error("ekki i lagi 3 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 				}
 			}
 			else {
-				throw new Error("ekki í lagi 4");
+				throw new Error("ekki i lagi 4 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 			}
 		}
 		else {
-			throw new Error("ekki í lagi 5");
+			throw new Error("ekki i lagi 5 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 		}
 	}
 
@@ -174,10 +174,14 @@ public class MicroMorphoParser{
 		}
 		else if(getToken() == NAME){
 			advance();
+			System.out.println("i lagi");
 			if(getFirstLexeme().equals("=")){
 				advance();
 				expr();
 			}
+		}
+		else if(getFirstLexeme().equals(";")){
+
 		}
 		else{
 			binopexpr();
@@ -220,6 +224,7 @@ public class MicroMorphoParser{
 			smallexpr();
 		}
 		else if(getToken()==LITERAL){
+			System.out.println("hmmmm " + getFirstLexeme());
 			advance();
 		}
 		else if(getFirstLexeme().equals('(')){
@@ -255,7 +260,7 @@ public class MicroMorphoParser{
 			body();
 		}
 		else {
-			// Throw Exception
+			throw new Error("ekki i lagi 6 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 		}
 	}
 
@@ -267,11 +272,11 @@ public class MicroMorphoParser{
 	//Vinnusvæði Eyjó
 
 	public static void decl() throws Exception {
-		System.out.println(getToken() + " : " + getLexeme() + " next: "+ getNextToken());
+
 		if (getToken() == VAR && getNextToken() == NAME) {
 			advance();
 			advance();
-			System.out.println("eg virka " + getToken() + " lex: "+ getFirstLexeme());
+	
 			while(getFirstLexeme().equals(",")) {
 				advance();
 				if(getToken() == NAME){
