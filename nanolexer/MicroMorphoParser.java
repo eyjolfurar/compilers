@@ -184,9 +184,6 @@ public class MicroMorphoParser{
 				expr();
 			}
 		}
-		else if(getFirstLexeme().equals(";")){
-
-		}
 		else{
 			binopexpr();
 		}
@@ -216,7 +213,7 @@ public class MicroMorphoParser{
 						advance();
 					}
 					else {
-						// Throw Exception
+						throw new Error("ekki i lagi 6 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 					}
 					expr();
 				}
@@ -239,7 +236,7 @@ public class MicroMorphoParser{
 				advance();
 			}
 			else {
-				//Throw Exception;
+				throw new Error("ekki i lagi 7 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 			}
 		}
 		else if(getToken()==IF){
@@ -256,7 +253,7 @@ public class MicroMorphoParser{
 				body();
 			}
 			else{
-				//Throw Exception
+				throw new Error("ekki i lagi 8 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 			}
 		}
 		else if(getToken()==WHILE){
@@ -265,7 +262,7 @@ public class MicroMorphoParser{
 			body();
 		}
 		else {
-			throw new Error("ekki i lagi 6 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+			throw new Error("ekki i lagi 9 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 		}
 	}
 
@@ -288,12 +285,12 @@ public class MicroMorphoParser{
 					advance();
 				}
 				else {
-					// Throw Exception
+					throw new Error("ekki i lagi 10 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 				}
 			}
 		}
 		else {
-			// THrow Exception
+			throw new Error("ekki i lagi 11 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 		}
 		System.out.println(getToken() + " next2: "+ getNextToken());
 	}
@@ -307,14 +304,14 @@ public class MicroMorphoParser{
 					advance();
 				}
 				else {
-					// THrow Exception
+					throw new Error("ekki i lagi 12 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 				}
 			}
 			advance();
 			System.out.println("Body búið!");
 		}
 		else {
-			// Throw Exception
+			throw new Error("ekki i lagi 13 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 		}
 	}
 
