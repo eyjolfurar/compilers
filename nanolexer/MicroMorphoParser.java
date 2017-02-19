@@ -92,11 +92,13 @@ public class MicroMorphoParser{
 							throw new Error("ekki i lagi 1 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 						}
 					}
-					while (!getFirstLexeme().equals('}')) {
+					while (!getFirstLexeme().equals("}")) {
+						System.out.println("kallad a expr  "+ getFirstLexeme());
 						expr();
 						if (getFirstLexeme().equals(";")) {
 							advance();
 						}
+
 						else {
 							throw new Error("ekki i lagi 2 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
 						}
@@ -167,6 +169,7 @@ public class MicroMorphoParser{
 	}*/
 	//Vinnusvæði Matta ætla að henda í expr fallið
 	public static void expr() throws Exception {
+		System.out.println("jaaaaajaaa lex: "+getFirstLexeme());
 		if(getToken() == RETURN){
 			advance();
 			expr();
@@ -177,6 +180,7 @@ public class MicroMorphoParser{
 			System.out.println("i lagi");
 			if(getFirstLexeme().equals("=")){
 				advance();
+
 				expr();
 			}
 		}
@@ -191,7 +195,7 @@ public class MicroMorphoParser{
 	public static void binopexpr() throws Exception {
 		smallexpr();
 		System.out.println("tok: "+getToken()+" lex: "+getFirstLexeme() );
-		while(getToken() == OPERATOR){
+		while(getToken() == OPERATOR){	
 			advance();
 			smallexpr();
 		}
