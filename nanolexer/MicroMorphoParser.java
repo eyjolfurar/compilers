@@ -195,7 +195,7 @@ public class MicroMorphoParser{
 	public static void binopexpr() throws Exception {
 		smallexpr();
 		System.out.println("tok: "+getToken()+" lex: "+getFirstLexeme() );
-		while(getToken() == OPERATOR){	
+		while(getToken() == OPERATOR){
 			advance();
 			smallexpr();
 		}
@@ -206,13 +206,13 @@ public class MicroMorphoParser{
 		if(getToken()==NAME){
 			advance();
 		}
-		else if(getToken()==NAME && getLexeme().equals('(')){
+		else if(getToken()==NAME && getLexeme().equals("("){
 			advance();
 			advance();
 			if(!getFirstLexeme().equals(")")) {
 				expr();
 				while(!getFirstLexeme().equals(")")){
-					if(getFirstLexeme().equals(',')){
+					if(getFirstLexeme().equals(",")){
 						advance();
 					}
 					else {
@@ -232,10 +232,10 @@ public class MicroMorphoParser{
 			System.out.println("hmmmm " + getFirstLexeme());
 			advance();
 		}
-		else if(getFirstLexeme().equals('(')){
+		else if(getFirstLexeme().equals("(")){
 			advance();
 			expr();
-			if(getFirstLexeme().equals(')')){
+			if(getFirstLexeme().equals(")")){
 				advance();
 			}
 			else {
