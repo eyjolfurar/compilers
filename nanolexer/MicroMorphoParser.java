@@ -141,7 +141,7 @@ public class MicroMorphoParser{
 
 	public static void binopexpr() throws Exception {
 		smallexpr();
-		advance();
+		System.out.println("tok: "+getToken()+" lex: "+getFirstLexeme() );
 		while(getToken() == OPERATOR){
 			advance();
 			smallexpr();
