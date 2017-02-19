@@ -74,40 +74,37 @@ public class MicroMorphoParser{
 						advance();
 					}
 				}
-			}
-			else {
-				// Throw Exception
-			}
-			if (getFirstLexeme() == ")") {
-				advance();
-				if (getFirstLexeme() == "{") {
+				if (getFirstLexeme() == ")") {
 					advance();
-				}
-				while (getFirstLexeme().equals("var")) {
-					decl();
-					if (getFirstLexeme().equals(";")) {
+					if (getFirstLexeme() == "{") {
+						advance();
+					}
+					while (getFirstLexeme().equals("var")) {
+						decl();
+						if (getFirstLexeme().equals(";")) {
+							advance();
+						}
+						else {
+							// THrow error
+						}
+					}
+					while (getToken() == NAME || getToken() == OPNAME || getToken() == LITERAL
+									|| getFirstLexeme().equals("return") || getFirstLexeme().equals("(")
+					 				|| getFirstLexeme().equals("if") || getFirstLexeme().equals("while")) {
+						expr();
+						if (getFirstLexeme().equals(";")) {
+							advance();
+						}
+						else {
+							// THrow Exception
+						}
+					}
+					if (getFirstLexeme().equals('}')) {
 						advance();
 					}
 					else {
-						// THrow error
+						// Throw Exception
 					}
-				}
-				while (getToken() == NAME || getToken() == OPNAME || getToken() == LITERAL
-								|| getFirstLexeme().equals("return") || getFirstLexeme().equals("(")
-				 				|| getFirstLexeme().equals("if") || getFirstLexeme().equals("while")) {
-					expr();
-					if (getFirstLexeme().equals(";")) {
-						advance();
-					}
-					else {
-						// THrow Exception
-					}
-				}
-				if (getFirstLexeme().equals('}')) {
-					advance();
-				}
-				else {
-					// Throw Exception
 				}
 			}
 			else {
