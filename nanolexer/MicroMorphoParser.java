@@ -80,7 +80,7 @@ public class MicroMorphoParser{
 				if (getFirstLexeme().equals(")")) {
 					advance();
 					System.out.println("HAE!");
-					if (getFirstLexeme() == "{") {
+					if (getFirstLexeme().equals("{")) {
 						advance();
 					}
 					while (getToken() == VAR) {
@@ -92,7 +92,7 @@ public class MicroMorphoParser{
 							throw new Error("ekki í lagi 1");
 						}
 					}
-					while (getToken() != 0) {
+					while (!getFirstLexeme().equals('}')) {
 						expr();
 						if (getFirstLexeme().equals(";")) {
 							advance();
@@ -101,16 +101,11 @@ public class MicroMorphoParser{
 							throw new Error("ekki í lagi 2");
 						}
 					}
-					if (getFirstLexeme().equals('}')) {
-
-						advance();
-					}
-					else {
-						throw new Error("ekki í lagi 3");
-					}
+					advance();
 				}
-
-				advance();
+				else {
+					throw new Error("ekki í lagi 3");
+				}
 			}
 			else {
 				throw new Error("ekki í lagi 4");
