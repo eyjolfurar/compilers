@@ -95,9 +95,7 @@ public class MicroMorphoParser{
 						// THrow Exception
 					}
 				}
-				while (getToken() == NAME || getToken() == OPNAME || getToken() == LITERAL
-								|| getFirstLexeme().equals("return") || getFirstLexeme().equals("(")
-				 				|| getFirstLexeme().equals("if") || getFirstLexeme().equals("while")) {
+				while (!getFirstLexeme().equals('}')) {
 					expr();
 					if (getFirstLexeme().equals(";")) {
 						advance();
@@ -106,12 +104,7 @@ public class MicroMorphoParser{
 						// THrow Exception
 					}
 				}
-				if (getFirstLexeme().equals('}')) {
-					advance();
-				}
-				else {
-					// Throw Exception
-				}
+				advance();
 			}
 			else {
 				// Throw Exception
