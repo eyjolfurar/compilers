@@ -24,14 +24,14 @@ public class MicroMorphoParser{
 	    {
 	        MicroMorphoFlex.startLex(args[0]);
 	        //program();
-	        while(getToken() != 0){
-	        	System.out.println("token 1: " + getToken() + " lex : " + getFirstLexeme() + "");
-	        	System.out.println("token 2: " + getNextToken() + " lex2 : " + getLexeme() + "");
+	        //while(getToken() != 0){
+	        	//System.out.println("token 1: " + getToken() + " lex : " + getFirstLexeme() + "");
+	        	//System.out.println("token 2: " + getNextToken() + " lex2 : " + getLexeme() + "");
 	        	program();
 
-	        	advance();
+	        	//advance();
 
-	        }
+	        //}
 	    }
 	    catch( Throwable e )
 	    {
@@ -63,8 +63,8 @@ public class MicroMorphoParser{
 	}
 
 
-	public static void altFunction() throws Exception {
-
+	public static void function() throws Exception {
+		System.out.println("tok1: " + getToken() + " lex1: " + getFirstLexeme());
 		if (getToken() == NAME) {
 			advance();
 			if (getFirstLexeme().equals("(")) {
@@ -76,8 +76,10 @@ public class MicroMorphoParser{
 						advance();
 					}
 				}
-				if (getFirstLexeme() == ")") {
+				System.out.println("tok: " + getToken() + " lex: " + getFirstLexeme());
+				if (getFirstLexeme().equals(")")) {
 					advance();
+					System.out.println("HAE!");
 					if (getFirstLexeme() == "{") {
 						advance();
 					}
@@ -119,7 +121,7 @@ public class MicroMorphoParser{
 		}
 	}
 
-	public static void function() throws Exception {
+	/*public static void function() throws Exception {
 		//System.out.println("tok: " + getToken());
 		//System.out.println("lex: " + getLexeme());
 		if(getToken() == NAME){
@@ -167,7 +169,7 @@ public class MicroMorphoParser{
 				}
 			}
 		}
-	}
+	}*/
 	//Vinnusvæði Matta ætla að henda í expr fallið
 	public static void expr() throws Exception {
 		if(getToken() == RETURN){
@@ -289,7 +291,7 @@ public class MicroMorphoParser{
 		if (getFirstLexeme().equals("{")) {
 			while (!getFirstLexeme().equals("}")) {
 				expr();
-				System.out.print("Expression í body búin!")
+				System.out.print("Expression í body búin!");
 				if (getFirstLexeme().equals(";")) {
 					advance();
 				}
@@ -298,7 +300,7 @@ public class MicroMorphoParser{
 				}
 			}
 			advance();
-			System.out.println("Body búið!")
+			System.out.println("Body búið!");
 		}
 		else {
 			// Throw Exception
