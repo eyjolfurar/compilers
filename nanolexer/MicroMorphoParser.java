@@ -62,6 +62,16 @@ public class MicroMorphoParser{
 		System.out.println("suxxxxess");
 	}
 
+	public static altFunction() throws Exception {
+		if (getToken() == NAME) {
+			advance();
+			//if (getFirstLexeme)
+		}
+		else {
+			// Throw Exception
+		}
+	}
+
 	public static void function() throws Exception {
 		//System.out.println("tok: " + getToken());
 		//System.out.println("lex: " + getLexeme());
@@ -91,7 +101,7 @@ public class MicroMorphoParser{
 			//ATH eyjó hérna er kallað á decl!!
 									//decl(); <-------- hér
 									System.out.println("fínt maður");
-									
+
 									if(getFirstLexeme().equals(";")){
 										advance();
 									} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
@@ -100,7 +110,7 @@ public class MicroMorphoParser{
 							else if(getToken() != 0){
 								System.out.println("okokok");
 								expr();
-								
+
 								if(getFirstLexeme().equals(";")){
 									advance();
 								} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
