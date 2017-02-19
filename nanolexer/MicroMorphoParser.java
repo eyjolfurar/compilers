@@ -65,7 +65,7 @@ public class MicroMorphoParser{
 	public static void altFunction() throws Exception {
 		if (getToken() == NAME) {
 			advance();
-			if (getFirstLexeme() == "(") {
+			if (getFirstLexeme().equals("(")) {
 				advance();
 				if (getToken() == NAME) {
 					advance();
@@ -78,10 +78,13 @@ public class MicroMorphoParser{
 			else {
 				// Throw Exception
 			}
-			if (getFirstLexeme() == ")") {
+			if (getFirstLexeme().equals(")") {
 				advance();
-				if (getFirstLexeme() == "{") {
+				if (getFirstLexeme().equals("{")) {
 					advance();
+				}
+				else {
+					// Throw Exception
 				}
 				while (getFirstLexeme().equals("var")) {
 					decl();
@@ -89,7 +92,7 @@ public class MicroMorphoParser{
 						advance();
 					}
 					else {
-						// THrow error
+						// THrow Exception
 					}
 				}
 				while (getToken() == NAME || getToken() == OPNAME || getToken() == LITERAL
