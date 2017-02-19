@@ -201,17 +201,23 @@ public class MicroMorphoParser{
 		else if(getToken()==NAME && getLexeme().equals('(')){
 			advance();
 			advance();
-			while(!getFirstLexeme().equals("")){
+			if(!getFirstLexeme().equals(")") {
 				expr();
-				if(getLexeme().equals(',')){
-					advance();
+				while(!getFirstLexeme().equals(")")){
+					if(getFirstLexeme().equals(',')){
+						advance();
+					}
+					else {
+						// Throw Exception
+					}
+					expr();
 				}
+				advance();
 			}
 		}
 		else if(getToken()==OPERATOR){
 			advance();
 			smallexpr();
-
 		}
 		else if(getToken()==LITERAL){
 			advance();
@@ -225,7 +231,6 @@ public class MicroMorphoParser{
 			else {
 				//Throw Exception;
 			}
-
 		}
 		else if(getToken()==IF){
 			advance();
