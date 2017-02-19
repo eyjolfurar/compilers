@@ -62,7 +62,7 @@ public class MicroMorphoParser{
 		System.out.println("suxxxxess");
 	}
 
-	public static altFunction() throws Exception {
+	public static void altFunction() throws Exception {
 		if (getToken() == NAME) {
 			advance();
 			//if (getFirstLexeme)
@@ -166,10 +166,10 @@ public class MicroMorphoParser{
 		if (getToken() == VAR && getNextToken() == NAME) {
 			advance();
 			advance();
-			System.out.println("eg virka" + getToken());
-			while(getFirstLexeme().equals(',')) {
+			System.out.println("eg virka " + getToken() + " lex: "+ getFirstLexeme());
+			while(getFirstLexeme().equals(",")) {
 				advance();
-				if(getNextToken() == NAME){
+				if(getToken() == NAME){
 					advance();
 				}
 				else {
