@@ -160,7 +160,7 @@ _OPERATOR= [\+\-*/!%&=><\:\^\~&|?]+
 	return RETURN;
 }
 
-"VAR" {
+"var" {
 	lexeme = yytext();
 	return VAR;
 }

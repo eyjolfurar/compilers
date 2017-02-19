@@ -25,9 +25,10 @@ public class MicroMorphoParser{
 	        MicroMorphoFlex.startLex(args[0]);
 	        //program();
 	        while(getToken() != 0){
-	        	program();
 	        	System.out.println("token 1: " + getToken() + " lex : " + getFirstLexeme() + "");
 	        	System.out.println("token 2: " + getNextToken() + " lex2 : " + getLexeme() + "");
+	        	program();
+	        	
 	        	advance();
 	        	
 	        }
@@ -57,7 +58,6 @@ public class MicroMorphoParser{
 	public static void program() throws Exception {
 		
 			function();
-			advance();
 
 		System.out.println("suxxxxess");
 	}
@@ -67,44 +67,42 @@ public class MicroMorphoParser{
 		//System.out.println("lex: " + getLexeme());
 		if(getToken() == NAME){
 			advance();
-		
-			if(getFirstLexeme() == "("){
+			System.out.println(getToken());
+			if(getFirstLexeme().equals("(")){
 				advance();
-			
 				while(getToken() == NAME){
 					advance();
-					System.out.println("þetta gerðis");
-					if(getFirstLexeme() == ";"){
-
+					
+					if(getFirstLexeme().equals(",")){
+						System.out.println(getToken());
 						advance();
 					} else { break;	}
 				}
-
-				if(getFirstLexeme() == ")"){
+				System.out.println(getToken() + " " + getFirstLexeme());
+				if(getFirstLexeme().equals(")")){
 					advance();
-					if(getFirstLexeme() == "{"){
+					if(getFirstLexeme().equals("{")){
 						advance();
-						if(getFirstLexeme() == "}"){ advance(); }
-						else if(getToken() == VAR){
-							while(getToken() == VAR){
-								System.out.println("fínt maður");
-								advance();
-								if(getFirstLexeme() == ";" ){
+						System.out.println(getToken() + " " + getFirstLexeme());
+						while(getToken() != 0){
+							if(getFirstLexeme().equals("}")){ advance(); }
+							else if(getToken() == VAR){
+								while(getToken() == VAR){
+									System.out.println("fínt maður");
 									advance();
-								} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
+									if(getFirstLexeme().equals(";")){
+										advance();
+									} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
+								}
 							}
-						}
-						else{
-							while(getToken() != 0 || getFirstLexeme() != "}"){
+							else if(getToken() != 0){
 								System.out.println("okokok");
 								advance();
-								if(getFirstLexeme() == ";" ){
+								if(getFirstLexeme().equals(";")){
 									advance();
 								} else { throw new Error("expected ;, found "+ getFirstLexeme()); }
-							}
-
+							}	
 						}
-						
 					}
 				}
 			}
