@@ -226,7 +226,25 @@ public class MicroMorphoParser{
 		System.out.println(getToken() + " next2: "+ getNextToken());
 	}
 
-
+	public static void body() throws Exception {
+		if (getFirstLexeme().equals("{")) {
+			while (!getFirstLexeme().equals("}")) {
+				expr();
+				System.out.print("Expression í body búin!")
+				if (getFirstLexeme().equals(";")) {
+					advance();
+				}
+				else {
+					// THrow Exception
+				}
+			}
+			advance();
+			System.out.println("Body búið!")
+		}
+		else {
+			// Throw Exception
+		}
+	}
 
 
 }
