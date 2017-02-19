@@ -218,6 +218,7 @@ public class MicroMorphoParser{
 				}
 				advance();
 			}
+			advance();
 		}
 		else if(getToken()==OPERATOR){
 			advance();
@@ -276,7 +277,7 @@ public class MicroMorphoParser{
 		if (getToken() == VAR && getNextToken() == NAME) {
 			advance();
 			advance();
-	
+
 			while(getFirstLexeme().equals(",")) {
 				advance();
 				if(getToken() == NAME){
