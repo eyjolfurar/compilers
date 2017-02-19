@@ -62,15 +62,62 @@ public class MicroMorphoParser{
 		System.out.println("suxxxxess");
 	}
 
-/*	public static altFunction() throws Exception {
+
+	public static void altFunction() throws Exception {
+
 		if (getToken() == NAME) {
 			advance();
-			//if (getFirstLexeme)
+			if (getFirstLexeme().equals("(")) {
+				advance();
+				if (getToken() == NAME) {
+					advance();
+					while(getFirstLexeme().equals(",") && getNextToken() == NAME) {
+						advance();
+						advance();
+					}
+				}
+				if (getFirstLexeme() == ")") {
+					advance();
+					if (getFirstLexeme() == "{") {
+						advance();
+					}
+					while (getFirstLexeme().equals("var")) {
+						decl();
+						if (getFirstLexeme().equals(";")) {
+							advance();
+						}
+						else {
+							// THrow error
+						}
+					}
+					while (!getFirstLexeme().equals("}")) {
+						expr();
+						if (getFirstLexeme().equals(";")) {
+							advance();
+						}
+						else {
+							// THrow Exception
+						}
+					}
+					if (getFirstLexeme().equals('}')) {
+
+						advance();
+					}
+					else {
+						// Throw Exception
+					}
+				}
+
+				advance();
+			}
+			else {
+				// Throw Exception
+			}
 		}
 		else {
 			// Throw Exception
 		}
-	}*/
+	}
 
 	public static void function() throws Exception {
 		//System.out.println("tok: " + getToken());
@@ -99,8 +146,8 @@ public class MicroMorphoParser{
 							else if(getToken() == VAR){
 								while(getToken() == VAR){
 			//ATH eyjó hérna er kallað á decl!!
+
 									decl();
-									System.out.println("fínt maður");
 
 									if(getFirstLexeme().equals(";")){
 										advance();
@@ -141,7 +188,7 @@ public class MicroMorphoParser{
 
 	public static void binopexpr() throws Exception {
 		smallexpr();
-		advance();
+		System.out.println("tok: "+getToken()+" lex: "+getFirstLexeme() );
 		while(getToken() == OPERATOR){
 			advance();
 			smallexpr();
@@ -217,12 +264,14 @@ public class MicroMorphoParser{
 	//Vinnusvæði Eyjó
 
 	public static void decl() throws Exception {
+		System.out.println(getToken() + " : " + getLexeme() + " next: "+ getNextToken());
 		if (getToken() == VAR && getNextToken() == NAME) {
 			advance();
 			advance();
-			while(getFirstLexeme().equals(',')) {
+			System.out.println("eg virka " + getToken() + " lex: "+ getFirstLexeme());
+			while(getFirstLexeme().equals(",")) {
 				advance();
-				if(getNextToken() == NAME){
+				if(getToken() == NAME){
 					advance();
 				}
 				else {
@@ -233,6 +282,7 @@ public class MicroMorphoParser{
 		else {
 			// THrow Exception
 		}
+		System.out.println(getToken() + " next2: "+ getNextToken());
 	}
 
 
