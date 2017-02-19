@@ -209,7 +209,7 @@ public class MicroMorphoParser{
 		else if(getToken()==NAME && getLexeme().equals('(')){
 			advance();
 			advance();
-			if(!getFirstLexeme().equals(")") {
+			if(!getFirstLexeme().equals(")")) {
 				expr();
 				while(!getFirstLexeme().equals(")")){
 					if(getFirstLexeme().equals(',')){
