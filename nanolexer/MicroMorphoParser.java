@@ -1,3 +1,17 @@
+/**
+	JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
+	Höfundur: Snorri Agnarsson, janúar 2017
+
+	Þennan lesgreini má þýða og keyra með skipununum
+
+		java -jar JFlex-1.6.1.jar micromorphoflexer.jflex
+		javac MicroMorphoFlex.java MicroMorphoParser.java
+		java MicroMorphoParser inntaksskrá > úttaksskrá
+	Einnig má nota forritið 'make', ef viðeigandi 'makefile'
+	er til staðar:
+		make test
+ **/
+
 import java.util.Vector;
 import java.util.HashMap;
 
@@ -17,27 +31,15 @@ public class MicroMorphoParser{
 
 	static public void main( String[] args ) throws Exception
 	{
-		//MicroMorphoFlex lexer = new MicroMorphoFlex(new FileReader(garg));
-
-	    //Object[] code = null;
-	    try
+			try
 	    {
 	        MicroMorphoFlex.startLex(args[0]);
-	        //program();
-	        //while(getToken() != 0){
-	        	//System.out.println("token 1: " + getToken() + " lex : " + getFirstLexeme() + "");
-	        	//System.out.println("token 2: " + getNextToken() + " lex2 : " + getLexeme() + "");
-	        	program();
-
-	        	//advance();
-
-	        //}
-	    }
+	        program();
+			}
 	    catch( Throwable e )
 	    {
 	        System.out.println(e.getMessage());
 	    }
-	    //generateProgram(args[0],code);
 	}
 	private static int getToken(){
 		return MicroMorphoFlex.getToken();
@@ -142,10 +144,7 @@ public class MicroMorphoParser{
 	}
 
 	public static void smallexpr() throws Exception {
-		if(getToken()==NAME){
-			advance();
-		}
-		else if(getToken()==NAME && getLexeme().equals("(")){
+		if(getToken()==NAME && getLexeme().equals("(")){
 			advance();
 			advance();
 			if(!getFirstLexeme().equals(")")) {
@@ -161,6 +160,9 @@ public class MicroMorphoParser{
 				}
 				advance();
 			}
+			advance();
+		}
+		else if(getToken()==NAME){
 			advance();
 		}
 		else if(getToken()==OPERATOR){
