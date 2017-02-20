@@ -8,7 +8,7 @@ skritid() {
 	var kona;
 	var furduleg;
 	kona = 1 * 4 * 10;
-	if(kona = fugl){
+	if  7 = 7	 {
 		while( hljod ){
 			return 17 + 10;
 		}

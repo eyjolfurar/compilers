@@ -181,9 +181,11 @@ public class MicroMorphoParser{
 			}
 		}
 		else if(getToken()==IF){
+			System.out.println("læakjsdf");
 			advance();
 			expr();
 			body();
+
 			while(getNextToken()==ELSEIF){
 				advance();
 				expr();
