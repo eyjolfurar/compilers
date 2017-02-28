@@ -69,26 +69,30 @@ public class MicroMorphoParser{
 
 
 	public static void function() throws Exception {
-		over(NAME);
+		over(NAME); // String fName = over(NAME); geyma nafnið
 		over('(');
 		if(getToken() == NAME) {
-			over(NAME);
+			over(NAME); // addVar(over(NAME));
 			while (getToken() == ',' && getNextToken() == NAME) {
 				over(',');
-				over(NAME);
+				over(NAME);// addVar(over(NAME));
 			}
 		}
 		over(')');
 		over('{');
 		while (getToken() == VAR) {
-			decl();
+			decl(); // inn í decl bæta við addVar fyrir allar breytur
 			over(';');
 		}
+
+		// Búa til new Vector<Object> b = new Vector<Object>();
 		while (getToken() != '}') {
-			expr();
+			expr(); // Leggja öll expr á minnið b.add(expr());
 			over(';');
 		}
 		over('}');
+
+		// return new Object[] {fName, fjöldi argumenta, fjöldi local breyta, b.toArray()}
 		/*
 		if (getToken() == NAME) {
 			advance();
