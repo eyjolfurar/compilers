@@ -1,16 +1,16 @@
 /**
-	JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
-	Höfundur: Snorri Agnarsson, janúar 2017
+JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
+Höfundur: Snorri Agnarsson, janúar 2017
 
-	Þennan lesgreini má þýða og keyra með skipununum
+Þennan lesgreini má þýða og keyra með skipununum
 
-		java -jar JFlex-1.6.1.jar micromorphoflexer.jflex
-		javac MicroMorphoFlex.java MicroMorphoParser.java
-		java MicroMorphoParser inntaksskrá > úttaksskrá
-	Einnig má nota forritið 'make', ef viðeigandi 'makefile'
-	er til staðar:
-		make test
- **/
+java -jar JFlex-1.6.1.jar micromorphoflexer.jflex
+javac MicroMorphoFlex.java MicroMorphoParser.java
+java MicroMorphoParser inntaksskrá > úttaksskrá
+Einnig má nota forritið 'make', ef viðeigandi 'makefile'
+er til staðar:
+make test
+**/
 
 import java.util.Vector;
 import java.util.HashMap;
@@ -31,15 +31,15 @@ public class MicroMorphoParser{
 
 	static public void main( String[] args ) throws Exception
 	{
-			try
-	    {
-	        MicroMorphoFlex.startLex(args[0]);
-	        program();
-			}
-	    catch( Throwable e )
-	    {
-	        System.out.println(e.getMessage());
-	    }
+		try
+		{
+			MicroMorphoFlex.startLex(args[0]);
+			program();
+		}
+		catch( Throwable e )
+		{
+			System.out.println(e.getMessage());
+		}
 	}
 	private static int getToken(){
 		return MicroMorphoFlex.getToken();
@@ -47,73 +47,98 @@ public class MicroMorphoParser{
 	private static int getNextToken(){
 		return MicroMorphoFlex.getNextToken();
 	}
-	private static String getFirstLexeme(){
+	private static String getLexeme(){
 		return MicroMorphoFlex.getFirstLex();
 	}
-	private static String getLexeme(){
-		return MicroMorphoFlex.getLexeme();
+	private static String getNextLexeme(){
+		return MicroMorphoFlex.getNextLexeme();
 	}
 	private static void advance() throws Exception {
 		MicroMorphoFlex.advance();
 	}
+	private static String over(int tok) throws Exception {
+		MicroMorphoFlex.over(int tok);
+	}
 
 	public static void program() throws Exception {
 
-			while (getToken() != 0) {
-				function();
-			}
+		while (getToken() != 0) {
+			function();
+		}
 	}
 
 
 	public static void function() throws Exception {
+		over(NAME);
+		over('(');
+		if(getToken() == NAME) {
+			over(NAME);
+			while (getToken() == ',' && getNextToken() == NAME) {
+				over(',');
+				over(NAME);
+			}
+		}
+		over(')');
+		over('{');
+		while (getToken() == VAR) {
+			decl();
+			over(';');
+		}
+		while (getToken() != '}') {
+			expr();
+			over(';');
+		}
+		over('}');
+		/*
 		if (getToken() == NAME) {
 			advance();
-			if (getFirstLexeme().equals("(")) {
+			if (getLexeme().equals("(")) {
 				advance();
 				if (getToken() == NAME) {
 					advance();
-					while(getFirstLexeme().equals(",") && getNextToken() == NAME) {
+					while(getLexeme().equals(",") && getNextToken() == NAME) {
 						advance();
 						advance();
 					}
 				}
-				if (getFirstLexeme().equals(")")) {
+				if (getLexeme().equals(")")) {
 					advance();
-					if (getFirstLexeme().equals("{")) {
+					if (getLexeme().equals("{")) {
 						advance();
 					}
 					while (getToken() == VAR) {
 						decl();
-						if (getFirstLexeme().equals(";")) {
+						if (getLexeme().equals(";")) {
 							advance();
 						}
 						else {
-							throw new Error("ekki i lagi 1 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+							throw new Error("ekki i lagi 1 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 						}
 					}
-					while (!getFirstLexeme().equals("}")) {
+					while (!getLexeme().equals("}")) {
 						expr();
-						if (getFirstLexeme().equals(";")) {
+						if (getLexeme().equals(";")) {
 							advance();
 						}
 
 						else {
-							throw new Error("ekki i lagi 2 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+							throw new Error("ekki i lagi 2 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 						}
 					}
 					advance();
 				}
 				else {
-					throw new Error("ekki i lagi 3 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+					throw new Error("ekki i lagi 3 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 				}
 			}
 			else {
-				throw new Error("ekki i lagi 4 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+				throw new Error("ekki i lagi 4 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 			}
 		}
 		else {
-			throw new Error("ekki i lagi 5 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+			throw new Error("ekki i lagi 5 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 		}
+		*/
 	}
 
 	public static void expr() throws Exception {
@@ -123,7 +148,7 @@ public class MicroMorphoParser{
 		}
 		else if(getToken() == NAME){
 			advance();
-			if(getFirstLexeme().equals("=")){
+			if(getLexeme().equals("=")){
 				advance();
 
 				expr();
@@ -144,17 +169,17 @@ public class MicroMorphoParser{
 	}
 
 	public static void smallexpr() throws Exception {
-		if(getToken()==NAME && getLexeme().equals("(")){
+		if(getToken()==NAME && getNextLexeme().equals("(")){
 			advance();
 			advance();
-			if(!getFirstLexeme().equals(")")) {
+			if(!getLexeme().equals(")")) {
 				expr();
-				while(!getFirstLexeme().equals(")")){
-					if(getFirstLexeme().equals(",")){
+				while(!getLexeme().equals(")")){
+					if(getLexeme().equals(",")){
 						advance();
 					}
 					else {
-						throw new Error("ekki i lagi 6 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+						throw new Error("ekki i lagi 6 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 					}
 					expr();
 				}
@@ -172,14 +197,14 @@ public class MicroMorphoParser{
 		else if(getToken()==LITERAL){
 			advance();
 		}
-		else if(getFirstLexeme().equals("(")){
+		else if(getLexeme().equals("(")){
 			advance();
 			expr();
-			if(getFirstLexeme().equals(")")){
+			if(getLexeme().equals(")")){
 				advance();
 			}
 			else {
-				throw new Error("ekki i lagi 7 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+				throw new Error("ekki i lagi 7 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 			}
 		}
 		else if(getToken()==IF){
@@ -196,7 +221,7 @@ public class MicroMorphoParser{
 				body();
 			}
 			else{
-				throw new Error("ekki i lagi 8 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+				throw new Error("ekki i lagi 8 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 			}
 		}
 		else if(getToken()==WHILE){
@@ -205,7 +230,7 @@ public class MicroMorphoParser{
 			body();
 		}
 		else {
-			throw new Error("ekki i lagi 9 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+			throw new Error("ekki i lagi 9 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 		}
 	}
 
@@ -216,70 +241,71 @@ public class MicroMorphoParser{
 			advance();
 			advance();
 
-			while(getFirstLexeme().equals(",")) {
+			while(getLexeme().equals(",")) {
 				advance();
 				if(getToken() == NAME){
 					advance();
 				}
 				else {
-					throw new Error("ekki i lagi 10 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+					throw new Error("ekki i lagi 10 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 				}
 			}
 		}
 		else {
-			throw new Error("ekki i lagi 11 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+			throw new Error("ekki i lagi 11 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 		}
 	}
 
 	public static void body() throws Exception {
-		if (getFirstLexeme().equals("{")) {
-			while (!getFirstLexeme().equals("}")) {
+		if (getLexeme().equals("{")) {
+			while (!getLexeme().equals("}")) {
 				expr();
-				if (getFirstLexeme().equals(";")) {
+				if (getLexeme().equals(";")) {
 					advance();
 				}
 				else {
-					throw new Error("ekki i lagi 12 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+					throw new Error("ekki i lagi 12 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 				}
 			}
 			advance();
 		}
 		else {
-			throw new Error("ekki i lagi 13 nalaegt: "+ getFirstLexeme() + " og " + getLexeme());
+			throw new Error("ekki i lagi 13 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 		}
 	}
+
 
 
 }
 //{núll eða fleiri} [optional]
 /*
 program		=	{ function }
-			;
+;
 
 function	= 	NAME, '(', [ NAME, { ',', NAME } ] ')'
-				'{', { decl, ';' }, { expr, ';' }, '}'
-			;
+'{', { decl, ';' }, { expr, ';' }, '}'
+;
 
 decl		=	'var', NAME, { ',', NAME }
-			;
+;
 
 expr		=	'return', expr
-			|	NAME, '=', expr
-			|	binopexpr
-			;
+|	NAME, '=', expr
+|	binopexpr
+;
 
 binopexpr	=	smallexpr, { OPNAME, smallexpr }
-			;
+;
 
 smallexpr	=	NAME
-			|	NAME, '(', [ expr, { ',', expr } ], ')' //hvað er þetta?
-			|	OPNAME, smallexpr
-			| 	LITERAL
-			|	'(', expr, ')'
-			|	'if', expr, body, { 'elsif', expr, body }, [ 'else', body ]
-			|	'while', expr, body
-			;
+|	NAME, '(', [ expr, { ',', expr } ], ')' //hvað er þetta?
+|	OPNAME, smallexpr
+| 	LITERAL
+|	'(', expr, ')'
+|	'if', expr, body, { 'elsif', expr, body }, [ 'else', body ]
+|	'while', expr, body
+;
 
 body		=	'{', { expr, ';' }, '}'
-			;
-			*/
+;
+*/

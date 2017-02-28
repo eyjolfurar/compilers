@@ -3,7 +3,7 @@
 	Höfundur: Snorri Agnarsson, janúar 2017
 
 	Þennan lesgreini má þýða og keyra með skipununum
-	
+
 		java -jar JFlex-1.6.1.jar micromorphoflexer.jflex
 		javac MicroMorphoFlex.java MicroMorphoParser.java
 		java MicroMorphoFlex inntaksskrá > úttaksskrá
@@ -38,7 +38,7 @@ final static int OPERATOR = 1008;
 final static int VAR = 1009;
 
 // Breyta sem mun innihalda les (lexeme):
-private static String first_lexeme;
+//private static String first_lexeme;
 private static String lexeme;
 
 private static int token;
@@ -47,23 +47,22 @@ private static MicroMorphoFlex lexer;
 
 public static void startLex(String garg) throws Exception{
 	lexer = new MicroMorphoFlex(new FileReader(garg));
-	
+
 	token = lexer.yylex();
-	first_lexeme = lexer.yytext();
+	//first_lexeme = lexer.yytext();
 
 	token2 = lexer.yylex();
-	//System.out.println("Token 1: "+token+" : "+first_lexeme+"");
-	//System.out.pritln("Token 2: "+token2+": \'"+lexer.yytext()+"\'");
+
 	lexer.yypushback(lexer.yylength());
 
 }
 
 public static void advance() throws Exception {
-	
+
 		if( token != 0) {
-			
-			token = lexer.yylex();			
-			first_lexeme = lexer.yytext();
+
+			token = lexer.yylex();
+			//first_lexeme = lexer.yytext();
 			token2 = lexer.yylex();
 			lexer.yypushback(lexer.yylength());
 			//System.out.println("Token 1: "+token+": \'"+ first_lexeme +"\'");
@@ -72,10 +71,36 @@ public static void advance() throws Exception {
 
 }
 
-public static void over(){
+public static String over( int tok )
+throws Exception
+{
+	if( token!=tok ) expected(tok);
+	String res = lexeme1;
+	advance();
+	return res;
+}
 
-	//hoppa yfir name og sviga?!
+public static String over( char tok )
+throws Exception
+{
+	if( token!=(int)tok ) expected(tok);
+	String res = lexeme1;
+	advance();
+	return res;
+}
+private static void expected( int tok )
+{
+	expected(tokname(tok));
+}
 
+private static void expected( char tok )
+{
+	expected("'"+tok+"'");
+}
+
+public static void expected( String tok )
+{
+	throw new Error("Expected "+tok+", found '"+lexeme1+"' near line "+(line1+1)+", column "+(column1+1));
 }
 
 public static int getToken(){
@@ -91,7 +116,7 @@ public static int getNextToken(){
 }
 
 public static String getFirstLex(){
-	return first_lexeme;
+	return "";//first_lexeme;
 }
 
 public static String getLexeme(){
@@ -121,7 +146,7 @@ _OPERATOR= [\+\-*/!%&=><\:\^\~&|?]+
   /* Lesgreiningarreglur */
 
 {_DELIM} {
-	lexeme = yytext();		
+	lexeme = yytext();
 	return yycharat(0);
 }
 
