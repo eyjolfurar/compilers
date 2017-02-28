@@ -195,6 +195,7 @@ public class MicroMorphoParser{
 			smallexpr();
 		}
 		else if(getToken()==LITERAL){
+			System.out.println("bla: " + getFirstLexeme());
 			advance();
 		}
 		else if(getLexeme().equals("(")){
@@ -208,15 +209,18 @@ public class MicroMorphoParser{
 			}
 		}
 		else if(getToken()==IF){
+			System.out.println("læakjsdf");
 			advance();
 			expr();
+			System.out.println("body : "+getFirstLexeme());
 			body();
-			while(getNextToken()==ELSEIF){
+
+			while(getToken()==ELSEIF){
 				advance();
 				expr();
 				body();
 			}
-			if(getNextToken()==ELSE){
+			if(getToken()==ELSE){
 				advance();
 				body();
 			}
@@ -258,6 +262,7 @@ public class MicroMorphoParser{
 
 	public static void body() throws Exception {
 		if (getLexeme().equals("{")) {
+			advance();
 			while (!getLexeme().equals("}")) {
 				expr();
 				if (getLexeme().equals(";")) {
@@ -267,7 +272,7 @@ public class MicroMorphoParser{
 					throw new Error("ekki i lagi 12 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 				}
 			}
-			advance();
+
 		}
 		else {
 			throw new Error("ekki i lagi 13 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
