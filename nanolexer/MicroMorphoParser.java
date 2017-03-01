@@ -150,16 +150,13 @@ public class MicroMorphoParser{
 
 	public static void expr() throws Exception {
 		if(getToken() == RETURN){
-			advance();
+			over(RETURN);
 			expr();
 		}
-		else if(getToken() == NAME){
-			advance();
-			if(getLexeme().equals("=")){
-				advance();
-
-				expr();
-			}
+		else if(getToken() == NAME && getNextToken() == '='){
+			over(NAME);
+			over('=');
+			expr();
 		}
 		else{
 			binopexpr();
@@ -169,70 +166,51 @@ public class MicroMorphoParser{
 	public static void binopexpr() throws Exception {
 		smallexpr();
 		while(getToken() == OPERATOR){
-			advance();
+			over(OPERATOR);
 			smallexpr();
 		}
 
 	}
 
 	public static void smallexpr() throws Exception {
-		if(getToken()==NAME && getNextLexeme().equals("(")){
-			advance();
-			advance();
-			if(!getLexeme().equals(")")) {
-				expr();
-				while(!getLexeme().equals(")")){
-					if(getLexeme().equals(",")){
-						advance();
-					}
-					else {
-						throw new Error("ekki i lagi 6 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-					}
+		if(getToken()==NAME){
+			over(NAME);
+			if(getToken() == '(') {
+				over('(');
+				while(getToken1()!=')'){
 					expr();
+					if( getToken() == ')' ) break;
+					over(',');				
 				}
-				advance();
+				over(')');
 			}
 			advance();
 		}
-		else if(getToken()==NAME){
-			advance();
-		}
+
 		else if(getToken()==OPERATOR){
-			advance();
+			over(OPERATOR);
 			smallexpr();
 		}
 		else if(getToken()==LITERAL){
-			System.out.println("bla: " + getFirstLexeme());
-			advance();
+			over(LITERAL);
 		}
-		else if(getLexeme().equals("(")){
-			advance();
+		else if(getToken() '('){
+			over('(')
 			expr();
-			if(getLexeme().equals(")")){
-				advance();
-			}
-			else {
-				throw new Error("ekki i lagi 7 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-			}
+			over(')')
 		}
 		else if(getToken()==IF){
-			System.out.println("læakjsdf");
-			advance();
+			over(IF);
 			expr();
-			System.out.println("body : "+getFirstLexeme());
 			body();
-
 			while(getToken()==ELSEIF){
-				advance();
+				over(ELSEIF);
 				expr();
 				body();
 			}
 			if(getToken()==ELSE){
-				advance();
+				over(ELSE);
 				body();
-			}
-			else{
-				throw new Error("ekki i lagi 8 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 			}
 		}
 		else if(getToken()==WHILE){
@@ -240,50 +218,26 @@ public class MicroMorphoParser{
 			expr();
 			body();
 		}
-		else {
-			throw new Error("ekki i lagi 9 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-		}
 	}
 
 
 	public static void decl() throws Exception {
 
-		if (getToken() == VAR && getNextToken() == NAME) {
-			advance();
-			advance();
-
-			while(getLexeme().equals(",")) {
-				advance();
-				if(getToken() == NAME){
-					advance();
-				}
-				else {
-					throw new Error("ekki i lagi 10 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-				}
-			}
-		}
-		else {
-			throw new Error("ekki i lagi 11 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-		}
+		over(VAR);
+		over(NAME);
+			while(getToken() == ',') {
+				over(',');
+				over(NAME);
+			}		
 	}
 
 	public static void body() throws Exception {
-		if (getLexeme().equals("{")) {
-			advance();
-			while (!getLexeme().equals("}")) {
-				expr();
-				if (getLexeme().equals(";")) {
-					advance();
-				}
-				else {
-					throw new Error("ekki i lagi 12 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-				}
-			}
-
+		over('{');
+		while (getToken() != '}') {
+			expr();
+			over(";");
 		}
-		else {
-			throw new Error("ekki i lagi 13 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-		}
+		over('}');
 	}
 
 
