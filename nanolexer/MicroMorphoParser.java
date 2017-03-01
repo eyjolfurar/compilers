@@ -143,16 +143,13 @@ public class MicroMorphoParser{
 
 	public static void expr() throws Exception {
 		if(getToken() == RETURN){
-			advance();
+			over(RETURN);
 			expr();
 		}
-		else if(getToken() == NAME){
-			advance();
-			if(getLexeme().equals("=")){
-				advance();
-
-				expr();
-			}
+		else if(getToken() == NAME && getNextToken() == '='){
+			over(NAME);
+			over('=');
+			expr();
 		}
 		else{
 			binopexpr();
@@ -162,34 +159,30 @@ public class MicroMorphoParser{
 	public static void binopexpr() throws Exception {
 		smallexpr();
 		while(getToken() == OPERATOR){
-			advance();
+			over(OPERATOR);
 			smallexpr();
 		}
 
 	}
 
 	public static void smallexpr() throws Exception {
-		if(getToken()==NAME && getNextLexeme().equals("(")){
-			advance();
-			advance();
-			if(!getLexeme().equals(")")) {
-				expr();
-				while(!getLexeme().equals(")")){
-					if(getLexeme().equals(",")){
-						advance();
-					}
-					else {
-						throw new Error("ekki i lagi 6 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-					}
+		if(getToken()==NAME){
+			over(NAME);
+			if(getToken() == '(') {
+				over('(');
+				while(true){
+					expr();
+					if(getToken() == ')') break;
+					over(',');
+					//var að mixa hér síðast					
+
 					expr();
 				}
 				advance();
 			}
 			advance();
 		}
-		else if(getToken()==NAME){
-			advance();
-		}
+
 		else if(getToken()==OPERATOR){
 			advance();
 			smallexpr();
