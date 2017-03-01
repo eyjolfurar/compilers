@@ -220,42 +220,21 @@ public class MicroMorphoParser{
 
 	public static void decl() throws Exception {
 
-		if (getToken() == VAR && getNextToken() == NAME) {
-			advance();
-			advance();
-
-			while(getLexeme().equals(",")) {
-				advance();
-				if(getToken() == NAME){
-					advance();
-				}
-				else {
-					throw new Error("ekki i lagi 10 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-				}
-			}
-		}
-		else {
-			throw new Error("ekki i lagi 11 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-		}
+		over(VAR);
+		over(NAME);
+			while(getToken() == ',') {
+				over(',');
+				over(NAME);
+			}		
 	}
 
 	public static void body() throws Exception {
-		if (getLexeme().equals("{")) {
-			advance();
-			while (!getLexeme().equals("}")) {
-				expr();
-				if (getLexeme().equals(";")) {
-					advance();
-				}
-				else {
-					throw new Error("ekki i lagi 12 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-				}
-			}
-
+		over('{');
+		while (getToken() != '}') {
+			expr();
+			over(";");
 		}
-		else {
-			throw new Error("ekki i lagi 13 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-		}
+		over('}');
 	}
 
 
