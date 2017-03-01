@@ -174,64 +174,46 @@ public class MicroMorphoParser{
 			over(NAME);
 			if(getToken() == '(') {
 				over('(');
-				while(true){
+				while(getToken1()!=')'){
 					expr();
-					if(getToken() == ')') break;
-					over(',');
-					//var að mixa hér síðast					
-
-					expr();
+					if( getToken() == ')' ) break;
+					over(',');				
 				}
-				advance();
+				over(')');
 			}
 			advance();
 		}
 
 		else if(getToken()==OPERATOR){
-			advance();
+			over(OPERATOR);
 			smallexpr();
 		}
 		else if(getToken()==LITERAL){
-			System.out.println("bla: " + getFirstLexeme());
-			advance();
+			over(LITERAL);
 		}
-		else if(getLexeme().equals("(")){
-			advance();
+		else if(getToken() '('){
+			over('(')
 			expr();
-			if(getLexeme().equals(")")){
-				advance();
-			}
-			else {
-				throw new Error("ekki i lagi 7 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-			}
+			over(')')
 		}
 		else if(getToken()==IF){
-			System.out.println("læakjsdf");
-			advance();
+			over(IF);
 			expr();
-			System.out.println("body : "+getFirstLexeme());
 			body();
-
 			while(getToken()==ELSEIF){
-				advance();
+				over(ELSEIF);
 				expr();
 				body();
 			}
 			if(getToken()==ELSE){
-				advance();
+				over(ELSE);
 				body();
-			}
-			else{
-				throw new Error("ekki i lagi 8 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 			}
 		}
 		else if(getToken()==WHILE){
 			advance();
 			expr();
 			body();
-		}
-		else {
-			throw new Error("ekki i lagi 9 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
 		}
 	}
 
