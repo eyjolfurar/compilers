@@ -1,4 +1,4 @@
-/**
+/*
 	JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
 	Höfundur: Snorri Agnarsson, janúar 2017
 
@@ -10,7 +10,7 @@
 	Einnig má nota forritið 'make', ef viðeigandi 'makefile'
 	er til staðar:
 		make test
- **/
+ */
 
 import java.io.*;
 
@@ -41,9 +41,13 @@ final static int VAR = 1009;
 //private static String first_lexeme;
 private static String lexeme;
 
+private static String lexeme1;
+private static String lexeme2;
 private static int token;
 private static int token2;
 private static MicroMorphoFlex lexer;
+private static int line1, column1, line2, column2;
+
 
 public static void startLex(String garg) throws Exception{
 	lexer = new MicroMorphoFlex(new FileReader(garg));
@@ -88,6 +92,7 @@ throws Exception
 	advance();
 	return res;
 }
+
 private static void expected( int tok )
 {
 	expected(tokname(tok));
@@ -107,6 +112,33 @@ public static int getToken(){
 
 	return token;
 
+}
+
+private static String tokname( int tok )
+{
+	if( tok<1000 ) return ""+(char)tok;
+	switch( tok )
+	{
+	case MicroMorphoParser.IF:
+		return "if";
+	case MicroMorphoParser.ELSE:
+		return "else";
+	case MicroMorphoParser.ELSEIF:
+		return "elsif";
+	case MicroMorphoParser.WHILE:
+		return "while";
+	case MicroMorphoParser.VAR:
+		return "var";
+	case MicroMorphoParser.RETURN:
+		return "return";
+	case MicroMorphoParser.NAME:
+		return "name";
+	case MicroMorphoParser.OPERATOR:
+		return "operation";
+	case MicroMorphoParser.LITERAL:
+		return "literal";
+	}
+	throw new Error();
 }
 
 public static int getNextToken(){
