@@ -50,9 +50,11 @@ public class MicroMorphoParser{
 	private static String getLexeme(){
 		return MicroMorphoFlex.getFirstLex();
 	}
+	/*
 	private static String getNextLexeme(){
 		return MicroMorphoFlex.getNextLexeme();
 	}
+	*/
 	private static void advance() throws Exception {
 		MicroMorphoFlex.advance();
 	}
@@ -122,7 +124,7 @@ public class MicroMorphoParser{
 			over(NAME);
 			if(getToken() == '(') {
 				over('(');
-				while(getToken1()!=')'){
+				while(getToken()!=')'){
 					expr();
 					if( getToken() == ')' ) break;
 					over(',');				
@@ -136,14 +138,17 @@ public class MicroMorphoParser{
 			over(OPERATOR);
 			smallexpr();
 		}
+
 		else if(getToken()==LITERAL){
 			over(LITERAL);
 		}
-		else if(getToken() '('){
-			over('(')
+
+		else if(getToken() == '('){
+			over('(');
 			expr();
-			over(')')
+			over(')');
 		}
+
 		else if(getToken()==IF){
 			over(IF);
 			expr();
@@ -158,10 +163,15 @@ public class MicroMorphoParser{
 				body();
 			}
 		}
+
 		else if(getToken()==WHILE){
 			advance();
 			expr();
 			body();
+		}
+
+		else{
+			System.out.println("vantaði else statement, filler efni");
 		}
 	}
 
@@ -180,7 +190,7 @@ public class MicroMorphoParser{
 		over('{');
 		while (getToken() != '}') {
 			expr();
-			over(";");
+			over(';');
 		}
 		over('}');
 	}
