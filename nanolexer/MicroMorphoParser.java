@@ -1,4 +1,4 @@
-/*
+/**
 JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
 Höfundur: Snorri Agnarsson, janúar 2017
 
@@ -10,7 +10,7 @@ java MicroMorphoParser inntaksskrá > úttaksskrá
 Einnig má nota forritið 'make', ef viðeigandi 'makefile'
 er til staðar:
 make test
-*/
+**/
 
 import java.util.Vector;
 import java.util.HashMap;
@@ -57,10 +57,7 @@ public class MicroMorphoParser{
 		MicroMorphoFlex.advance();
 	}
 	private static String over(int tok) throws Exception {
-		return MicroMorphoFlex.over(tok);
-	}
-	private static String over(char tok) throws Exception {
-		return MicroMorphoFlex.over(tok);
+		MicroMorphoFlex.over(int tok);
 	}
 
 	public static void program() throws Exception {
@@ -94,58 +91,6 @@ public class MicroMorphoParser{
 			over(';');
 		}
 		over('}');
-
-		// return new Object[] {fName, fjöldi argumenta, fjöldi local breyta, b.toArray()}
-		/*
-		if (getToken() == NAME) {
-			advance();
-			if (getLexeme().equals("(")) {
-				advance();
-				if (getToken() == NAME) {
-					advance();
-					while(getLexeme().equals(",") && getNextToken() == NAME) {
-						advance();
-						advance();
-					}
-				}
-				if (getLexeme().equals(")")) {
-					advance();
-					if (getLexeme().equals("{")) {
-						advance();
-					}
-					while (getToken() == VAR) {
-						decl();
-						if (getLexeme().equals(";")) {
-							advance();
-						}
-						else {
-							throw new Error("ekki i lagi 1 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-						}
-					}
-					while (!getLexeme().equals("}")) {
-						expr();
-						if (getLexeme().equals(";")) {
-							advance();
-						}
-
-						else {
-							throw new Error("ekki i lagi 2 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-						}
-					}
-					advance();
-				}
-				else {
-					throw new Error("ekki i lagi 3 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-				}
-			}
-			else {
-				throw new Error("ekki i lagi 4 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-			}
-		}
-		else {
-			throw new Error("ekki i lagi 5 nalaegt: "+ getLexeme() + " og " + getNextLexeme());
-		}
-		*/
 	}
 
 	public static void expr() throws Exception {
