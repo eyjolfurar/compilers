@@ -59,7 +59,25 @@ public class MicroMorphoParser{
 		MicroMorphoFlex.advance();
 	}
 	private static String over(int tok) throws Exception {
-		MicroMorphoFlex.over(int tok);
+		return MicroMorphoFlex.over(tok);
+	}
+
+	private static int varCount;
+	private static HashMap<String,Integer> varTable;
+
+	private static void addVar( String name )
+	{
+		if( varTable.get(name) != null )
+			throw new Error("Variable "+name+" already exists, near line ");
+		varTable.put(name,varCount++);
+	}
+
+	private static int findVar( String name )
+	{
+		Integer res = varTable.get(name);
+		if( res == null )
+			throw new Error("Variable "+name+" does not exist, near line ");
+		return res;
 	}
 
 	public static void program() throws Exception {
@@ -71,13 +89,17 @@ public class MicroMorphoParser{
 
 
 	public static void function() throws Exception {
-		over(NAME); // String fName = over(NAME); geyma nafnið
+		varCount = 0;
+    varTable = new HashMap<String,Integer>();
+
+		String fName = over(NAME); //geyma nafnið
+
 		over('(');
 		if(getToken() == NAME) {
-			over(NAME); // addVar(over(NAME));
+			addVar(over(NAME));
 			while (getToken() == ',' && getNextToken() == NAME) {
 				over(',');
-				over(NAME);// addVar(over(NAME));
+				addVar(over(NAME));
 			}
 		}
 		over(')');
