@@ -68,7 +68,7 @@ public class MicroMorphoParser{
 	private static void addVar( String name )
 	{
 		if( varTable.get(name) != null )
-			throw new Error("Variable "+name+" already exists, near line ");
+			throw new Error("Variable "+name+" already exists, near line " + MicroMorphoFlex.getLine());
 		varTable.put(name,varCount++);
 	}
 
@@ -76,7 +76,7 @@ public class MicroMorphoParser{
 	{
 		Integer res = varTable.get(name);
 		if( res == null )
-			throw new Error("Variable "+name+" does not exist, near line ");
+			throw new Error("Variable "+name+" does not exist, near line" + MicroMorphoFlex.getLine());
 		return res;
 	}
 

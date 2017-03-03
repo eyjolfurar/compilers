@@ -53,7 +53,7 @@ public static void startLex(String garg) throws Exception{
 	lexer = new MicroMorphoFlex(new FileReader(garg));
 
 	token = lexer.yylex();
-	//first_lexeme = lexer.yytext();
+	lexeme = lexer.yytext();
 
 	token2 = lexer.yylex();
 
@@ -66,7 +66,7 @@ public static void advance() throws Exception {
 		if( token != 0) {
 
 			token = lexer.yylex();
-			//first_lexeme = lexer.yytext();
+			lexeme = lexer.yytext();
 			token2 = lexer.yylex();
 			lexer.yypushback(lexer.yylength());
 			//System.out.println("Token 1: "+token+": \'"+ first_lexeme +"\'");
@@ -79,7 +79,7 @@ public static String over( int tok )
 throws Exception
 {
 	if( token!=tok ) expected(tok);
-	String res = lexeme1;
+	String res = lexeme;
 	advance();
 	return res;
 }
@@ -88,7 +88,7 @@ public static String over( char tok )
 throws Exception
 {
 	if( token!=(int)tok ) expected(tok);
-	String res = lexeme1;
+	String res = lexeme;
 	advance();
 	return res;
 }
@@ -155,7 +155,10 @@ public static String getLexeme(){
 
 	return lexeme;
 
+}
 
+public static int getLine(){
+	return lexer.yyline;
 }
 
 %}
