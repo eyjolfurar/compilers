@@ -43,7 +43,7 @@ private static String lexeme;
 
 private static String lexeme1;
 private static String lexeme2;
-private static int token;
+private static int token1;
 private static int token2;
 private static MicroMorphoFlex lexer;
 private static int line1, column1, line2, column2;
@@ -51,35 +51,38 @@ private static int line1, column1, line2, column2;
 
 public static void startLex(String garg) throws Exception{
 	lexer = new MicroMorphoFlex(new FileReader(garg));
-
-	token = lexer.yylex();
-	lexeme = lexer.yytext();
-
 	token2 = lexer.yylex();
+	line2 = lexer.yyline;
+	column2 = lexer.yycolumn;
 
-	lexer.yypushback(lexer.yylength());
+	advance();
 
 }
 
-public static void advance() throws Exception {
+public static String advance() throws Exception {
 
-		if( token != 0) {
+	String res = lexeme1;
+	token1 = token2;
+	lexeme1 = lexeme2;
+	line1 = line2;
+	if(token2==0) return res;
+	lexeme2 = lexer.yytext();
+	token2 = lexer.yylex();
+	line2 = lexer.yyline;
 
-			token = lexer.yylex();
-			lexeme = lexer.yytext();
-			token2 = lexer.yylex();
-			lexer.yypushback(lexer.yylength());
-			//System.out.println("Token 1: "+token+": \'"+ first_lexeme +"\'");
-			//System.out.println("Token 2: "+token2+": \'"+ lexeme +"\'");
-		}
+	return res;
+
+	//lexer.yypushback(lexer.yylength());
+	//System.out.println("Token 1: "+token+": \'"+ first_lexeme +"\'");
+	//System.out.println("Token 2: "+token2+": \'"+ lexeme +"\'");
 
 }
 
 public static String over( int tok )
 throws Exception
 {
-	if( token!=tok ) expected(tok);
-	String res = lexeme;
+	if( token1!=tok ) expected(tok);
+	String res = lexeme1;
 	advance();
 	return res;
 }
@@ -87,8 +90,8 @@ throws Exception
 public static String over( char tok )
 throws Exception
 {
-	if( token!=(int)tok ) expected(tok);
-	String res = lexeme;
+	if( token1!=(int)tok ) expected(tok);
+	String res = lexeme1;
 	advance();
 	return res;
 }
@@ -108,9 +111,15 @@ public static void expected( String tok )
 	throw new Error("Expected "+tok+", found '"+lexeme1+"' near line "+(line1+1)+", column "+(column1+1));
 }
 
-public static int getToken(){
+public static int getToken1(){
 
-	return token;
+	return token1;
+
+}
+
+public static int getToken2(){
+
+	return token2;
 
 }
 
@@ -140,12 +149,13 @@ private static String tokname( int tok )
 	}
 	throw new Error();
 }
-
+/*
 public static int getNextToken(){
 
 	return token2;
 
 }
+*/
 
 public static String getFirstLex(){
 	return "";//first_lexeme;
@@ -181,52 +191,52 @@ _OPERATOR= [\+\-*/!%&=><\:\^\~&|?]+
   /* Lesgreiningarreglur */
 
 {_DELIM} {
-	lexeme = yytext();
+	lexeme2 = yytext();
 	return yycharat(0);
 }
 
 {_STRING} | {_FLOAT} | {_CHAR} | {_INT} | null | true | false {
-	lexeme = yytext();
+	lexeme2 = yytext();
 	return LITERAL;
 }
 
 {_OPERATOR} {
-	lexeme = yytext();
+	lexeme2 = yytext();
 	return OPERATOR;
 }
 
 "if" {
-	lexeme = yytext();
+	lexeme2 = yytext();
 	return IF;
 }
 
 "else" {
-	lexeme = yytext();
+	lexeme2 = yytext();
 	return ELSE;
 }
 
 "elseif" {
-	lexeme = yytext();
+	lexeme2 = yytext();
 	return ELSEIF;
 }
 
 "while" {
-	lexeme = yytext();
+	lexeme2 = yytext();
 	return WHILE;
 }
 
 "return" {
-	lexeme = yytext();
+	lexeme2 = yytext();
 	return RETURN;
 }
 
 "var" {
-	lexeme = yytext();
+	lexeme2 = yytext();
 	return VAR;
 }
 
 {_NAME} {
-	lexeme = yytext();
+	lexeme2 = yytext();
 	return NAME;
 }
 
@@ -242,6 +252,6 @@ _OPERATOR= [\+\-*/!%&=><\:\^\~&|?]+
 }
 
 . {
-	lexeme = yytext();
+	lexeme2 = yytext();
 	return ERROR;
 }

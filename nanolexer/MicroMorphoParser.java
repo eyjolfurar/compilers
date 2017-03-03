@@ -41,12 +41,14 @@ public class MicroMorphoParser{
 			System.out.println(e.getMessage());
 		}
 	}
-	private static int getToken(){
-		return MicroMorphoFlex.getToken();
+	private static int getToken1(){
+		return MicroMorphoFlex.getToken1();
 	}
-	private static int getNextToken(){
-		return MicroMorphoFlex.getNextToken();
+	
+	private static int getToken2(){
+		return MicroMorphoFlex.getToken2();
 	}
+	
 	private static String getLexeme(){
 		return MicroMorphoFlex.getFirstLex();
 	}
@@ -55,9 +57,9 @@ public class MicroMorphoParser{
 		return MicroMorphoFlex.getNextLexeme();
 	}
 	*/
-	private static void advance() throws Exception {
+	/*private static void advance() throws Exception {
 		MicroMorphoFlex.advance();
-	}
+	}*/
 	private static String over(int tok) throws Exception {
 		return MicroMorphoFlex.over(tok);
 	}
@@ -67,22 +69,24 @@ public class MicroMorphoParser{
 
 	private static void addVar( String name )
 	{
-		if( varTable.get(name) != null )
+		if( varTable.get(name) != null ){
 			throw new Error("Variable "+name+" already exists, near line " + MicroMorphoFlex.getLine());
+		}
 		varTable.put(name,varCount++);
 	}
 
 	private static int findVar( String name )
 	{
 		Integer res = varTable.get(name);
-		if( res == null )
+		if( res == null ){
 			throw new Error("Variable "+name+" does not exist, near line" + MicroMorphoFlex.getLine());
+		}
 		return res;
 	}
 
 	public static void program() throws Exception {
 
-		while (getToken() != 0) {
+		while (getToken1() != 0) {
 			function();
 		}
 	}
@@ -90,27 +94,27 @@ public class MicroMorphoParser{
 
 	public static void function() throws Exception {
 		varCount = 0;
-    varTable = new HashMap<String,Integer>();
+    	varTable = new HashMap<String,Integer>();
 
 		String fName = over(NAME); //geyma nafnið
 
 		over('(');
-		if(getToken() == NAME) {
+		if(getToken1() == NAME) {
 			addVar(over(NAME));
-			while (getToken() == ',' && getNextToken() == NAME) {
+			while (getToken1() == ',' && getToken2() == NAME) {
 				over(',');
 				addVar(over(NAME));
 			}
 		}
 		over(')');
 		over('{');
-		while (getToken() == VAR) {
+		while (getToken1() == VAR) {
 			decl(); // inn í decl bæta við addVar fyrir allar breytur
 			over(';');
 		}
 
 		// Búa til new Vector<Object> b = new Vector<Object>();
-		while (getToken() != '}') {
+		while (getToken1() != '}') {
 			expr(); // Leggja öll expr á minnið b.add(expr());
 			over(';');
 		}
@@ -118,11 +122,11 @@ public class MicroMorphoParser{
 	}
 
 	public static void expr() throws Exception {
-		if(getToken() == RETURN){
+		if(getToken1() == RETURN){
 			over(RETURN);
 			expr();
 		}
-		else if(getToken() == NAME && getNextToken() == '='){
+		else if(getToken1() == NAME && getToken2() == '='){
 			over(NAME);
 			over('=');
 			expr();
@@ -134,7 +138,7 @@ public class MicroMorphoParser{
 
 	public static void binopexpr() throws Exception {
 		smallexpr();
-		while(getToken() == OPERATOR){
+		while(getToken1() == OPERATOR){
 			over(OPERATOR);
 			smallexpr();
 		}
@@ -142,54 +146,53 @@ public class MicroMorphoParser{
 	}
 
 	public static void smallexpr() throws Exception {
-		if(getToken()==NAME){
+		if(getToken1()==NAME){
 			over(NAME);
-			if(getToken() == '(') {
+			if(getToken1() == '(') {
 				over('(');
-				while(getToken()!=')'){
+				while(getToken1()!=')'){
 					expr();
-					if( getToken() == ')' ) break;
+					if( getToken1() == ')' ) break;
 					over(',');				
 				}
 				over(')');
 			}
-			advance();
 		}
 
-		else if(getToken()==OPERATOR){
+		else if(getToken1()==WHILE){
+			over(WHILE);
+			expr();
+			body();
+		}
+
+		else if(getToken1()==OPERATOR){
 			over(OPERATOR);
 			smallexpr();
 		}
 
-		else if(getToken()==LITERAL){
+		else if(getToken1()==LITERAL){
 			over(LITERAL);
 		}
 
-		else if(getToken() == '('){
+		else if(getToken1() == '('){
 			over('(');
 			expr();
 			over(')');
 		}
 
-		else if(getToken()==IF){
+		else if(getToken1()==IF){
 			over(IF);
 			expr();
 			body();
-			while(getToken()==ELSEIF){
+			while(getToken1()==ELSEIF){
 				over(ELSEIF);
 				expr();
 				body();
 			}
-			if(getToken()==ELSE){
+			if(getToken1()==ELSE){
 				over(ELSE);
 				body();
 			}
-		}
-
-		else if(getToken()==WHILE){
-			advance();
-			expr();
-			body();
 		}
 
 		else{
@@ -202,7 +205,7 @@ public class MicroMorphoParser{
 
 		over(VAR);
 		over(NAME);
-			while(getToken() == ',') {
+			while(getToken1() == ',') {
 				over(',');
 				over(NAME);
 			}		
@@ -210,7 +213,7 @@ public class MicroMorphoParser{
 
 	public static void body() throws Exception {
 		over('{');
-		while (getToken() != '}') {
+		while (getToken1() != '}') {
 			expr();
 			over(';');
 		}

@@ -1,6 +1,3 @@
-{;;;"asdf"
-asdfasdfa
-;;;}
 "fibo.mexe" = main in
 {{
 main =
