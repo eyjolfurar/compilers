@@ -34,7 +34,8 @@ public class MicroMorphoParser{
 		try
 		{
 			MicroMorphoFlex.startLex(args[0]);
-			program();
+			Object[] code = program();
+			generateProgram(code);
 		}
 		catch( Throwable e )
 		{
@@ -57,9 +58,10 @@ public class MicroMorphoParser{
 		return MicroMorphoFlex.getNextLexeme();
 	}
 	*/
-	/*private static void advance() throws Exception {
+	private static void advance() throws Exception {
 		MicroMorphoFlex.advance();
-	}*/
+	}
+
 	private static String over(int tok) throws Exception {
 		return MicroMorphoFlex.over(tok);
 	}
@@ -84,17 +86,20 @@ public class MicroMorphoParser{
 		return res;
 	}
 
-	public static void program() throws Exception {
+	public static Object[] program() throws Exception {
+		
+		Vector<Object> a = new Vector<Object>();
 
 		while (getToken1() != 0) {
-			function();
+			a.add(function());
 		}
+		return a.toArray();
 	}
 
 
-	public static void function() throws Exception {
+	public static Object[] function() throws Exception {
 		varCount = 0;
-    	varTable = new HashMap<String,Integer>();
+    varTable = new HashMap<String,Integer>();
 
 		String fName = over(NAME); //geyma nafnið
 
@@ -107,121 +112,143 @@ public class MicroMorphoParser{
 			}
 		}
 		over(')');
+		int parCount = varCount;
 		over('{');
 		while (getToken1() == VAR) {
 			decl(); // inn í decl bæta við addVar fyrir allar breytur
 			over(';');
 		}
 
-		// Búa til new Vector<Object> b = new Vector<Object>();
+		Vector<Object> b = new Vector<Object>();
 		while (getToken1() != '}') {
-			expr(); // Leggja öll expr á minnið b.add(expr());
+			b.add(expr());
 			over(';');
 		}
 		over('}');
-		System.out.println(varTable);
+		return new Object[]{fName, parCount, varCount-parCount, b.toArray()};
 	}
 
-	public static void expr() throws Exception {
+	public static Object[] expr() throws Exception {
 		if(getToken1() == RETURN){
 			over(RETURN);
-			expr();
+			return new Object[]{"RETURN", expr()};
 		}
 		else if(getToken1() == NAME && getToken2() == '='){
-			over(NAME);
+			int pos = findVar(over(NAME));
 			over('=');
-			expr();
+			return new Object[]{"STORE", pos, expr()};
 		}
 		else{
-			binopexpr();
+			return binopexpr();
 		}
+
 	}
 
-	public static void binopexpr() throws Exception {
-		smallexpr();
+	public static Object[] binopexpr() throws Exception {
+		Object[] e = smallexpr();
+
 		while(getToken1() == OPERATOR){
-			over(OPERATOR);
-			smallexpr();
-		}
 
+			String op = over(OPERATOR);
+			
+			e = new Object[]{"CALL", op, new Object[]{e, smallexpr()}};
+
+		}
+		return e;
 	}
 
-	public static void smallexpr() throws Exception {
+	public static Object[] smallexpr() throws Exception {
 		if(getToken1()==NAME){
-			over(NAME);
+			String c = over(NAME);
 			if(getToken1() == '(') {
 				over('(');
+					Vector<Object> v = new Vector<Object>();
 				while(getToken1()!=')'){
-					expr();
+					v.add(expr());
 					if( getToken1() == ')' ) break;
 					over(',');				
 				}
 				over(')');
-			}
+				return new Object[] {"FUNCALL",c, v.toArray()};
+			} else { 
+				int pos = findVar(c);
+				return new Object[]{"VARCALL", pos}; }
+
 		}
 
 		else if(getToken1()==WHILE){
 			over(WHILE);
-			expr();
-			body();
+			Object[] e = expr();
+			Object[] b = body();
+			return new Object[]{"WHILE", e, b};
 		}
 
 		else if(getToken1()==OPERATOR){
-			over(OPERATOR);
-			smallexpr();
+			String op = over(OPERATOR);
+			return new Object[] {"OPERATOR", op, smallexpr()};
 		}
 
 		else if(getToken1()==LITERAL){
-			over(LITERAL);
+			String lit = over(LITERAL);
+			return new Object[]{"LITERAL", lit};
 		}
 
 		else if(getToken1() == '('){
 			over('(');
-			expr();
+			Object[] e = {expr()};
 			over(')');
+			return e;
 		}
 
 		else if(getToken1()==IF){
 			over(IF);
-			expr();
-			body();
+			Object[] els = new Object[]{};
+			Object[] i = new Object[]{"IF", expr(), body()};
+			Vector<Object> ei = new Vector<Object>();
 			while(getToken1()==ELSEIF){
 				over(ELSEIF);
-				expr();
-				body();
+				ei.add(new Object[]{"ELSEIF", expr(), body()});
 			}
 			if(getToken1()==ELSE){
 				over(ELSE);
-				body();
+				els = new Object[]{"ELSE", body()};
 			}
+			return new Object[]{"IFS", i, ei.toArray(), els}; 
 		}
 
 		else{
-			System.out.println("vantaði else statement, filler efni");
+			MicroMorphoFlex.expected("expression");	
 		}
+		return null;
 	}
 
 
 	public static void decl() throws Exception {
 
 		over(VAR);
-		over(NAME);
+		addVar(over(NAME));
 			while(getToken1() == ',') {
 				over(',');
-				over(NAME);
+				addVar(over(NAME));
 			}		
 	}
 
-	public static void body() throws Exception {
+	public static Object[] body() throws Exception {
 		over('{');
+		Vector<Object> b = new Vector<Object>();
 		while (getToken1() != '}') {
-			expr();
+			b.add(expr());
 			over(';');
 		}
 		over('}');
+		return new Object[]{"BODY", b.toArray()};
 	}
 
-
+	public static void generateProgram(Object[] code){
+		
+		System.out.println("virkar bara");
+	
+	}
 
 }
 //{núll eða fleiri} [optional]
@@ -245,7 +272,7 @@ binopexpr	=	smallexpr, { OPNAME, smallexpr }
 ;
 
 smallexpr	=	NAME
-|	NAME, '(', [ expr, { ',', expr } ], ')' //hvað er þetta?
+|	NAME, '(', [ expr, { ',', expr } ], ')' fun(hundur, 2 3)
 |	OPNAME, smallexpr
 | 	LITERAL
 |	'(', expr, ')'
