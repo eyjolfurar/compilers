@@ -14,6 +14,7 @@ make test
 
 import java.util.Vector;
 import java.util.HashMap;
+import java.util.Arrays;
 
 public class MicroMorphoParser{
 
@@ -35,6 +36,7 @@ public class MicroMorphoParser{
 		{
 			MicroMorphoFlex.startLex(args[0]);
 			Object[] code = program();
+			System.out.println("Millithulu Objectid: " + Arrays.deepToString(code));
 			generateProgram(code);
 		}
 		catch( Throwable e )
@@ -245,9 +247,7 @@ public class MicroMorphoParser{
 	}
 
 	public static void generateProgram(Object[] code){
-		
-		System.out.println("virkar bara");
-	
+			
 	}
 
 }
