@@ -119,6 +119,7 @@ public class MicroMorphoParser{
 			over(';');
 		}
 		over('}');
+		System.out.println(varTable);
 	}
 
 	public static void expr() throws Exception {
