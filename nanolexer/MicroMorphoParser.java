@@ -1,4 +1,4 @@
-/**
+/*
 JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
 Höfundur: Snorri Agnarsson, janúar 2017
 
@@ -10,7 +10,7 @@ java MicroMorphoParser inntaksskrá > úttaksskrá
 Einnig má nota forritið 'make', ef viðeigandi 'makefile'
 er til staðar:
 make test
-**/
+*/
 
 import java.util.Vector;
 import java.util.HashMap;
@@ -32,12 +32,15 @@ public class MicroMorphoParser{
 
 	static public void main( String[] args ) throws Exception
 	{
+		Object[] code = null;
 		try
 		{
 			MicroMorphoFlex.startLex(args[0]);
+
 			Object[] code = program();
 			System.out.println("Millithulu Objectid: " + Arrays.deepToString(code));
 			generateProgram(code);
+
 		}
 		catch( Throwable e )
 		{
@@ -146,6 +149,7 @@ public class MicroMorphoParser{
 
 	}
 
+
 	public static Object[] binopexpr() throws Exception {
 		Object[] e = smallexpr();
 
@@ -225,7 +229,7 @@ public class MicroMorphoParser{
 	}
 
 
-	public static void decl() throws Exception {
+	public static int decl() throws Exception {
 
 		over(VAR);
 		addVar(over(NAME));
