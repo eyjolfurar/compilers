@@ -2,7 +2,7 @@ kallinn ( kaffi , bull , drasl ) {
 	var strato , mygla ; 
 	var party , ok ; 
 
-	return coke = 1 + 2 - 3 ;
+	return party = 1 + 2 - 3 ;
 }
 skritid() {
 	var kona;
@@ -10,9 +10,9 @@ skritid() {
 	kona = 1 * 4 * 10;
 	if  (7 + 7)	 
 	{
-		while( hljod )
+		while  (kona)
 		{
-			return 17 + 10 ;
+			return 17 + 10;
 		};
 	};
 }
