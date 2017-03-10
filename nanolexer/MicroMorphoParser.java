@@ -246,10 +246,27 @@ public class MicroMorphoParser{
 		return new Object[]{"BODY", b.toArray()};
 	}
 
-	public static void generateProgram(Object[] code){
-			
+	public static void generateProgram(String name, Object[] code){
+		emit("\" "+name+" .mexe\" = main in");
+		emit("!{{");
+		for( int i = 0 ; i!=p.length ; i++) generateFunction((Object[])p[i]);
+		emit("}}*BASIS");
 	}
+	Object[]{"bull"};
 
+	public static void generateFunction(Object[] f){
+		//f {fName, parCount, varCount, expr()};
+		String fname = (String)f[0];
+		int parCount = (Integer)f[1];
+		int varCount = (Integer)f[2];
+		emit("#\""+fname+"[f"+count+"]\" =");
+		emit("[");
+		generateExpr((Object[])f[3]);
+		emit("]");
+	}
+	public static void generateExpr(Object[] e){
+		
+	}
 }
 //{núll eða fleiri} [optional]
 /*
