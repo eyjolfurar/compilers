@@ -1,4 +1,4 @@
-/**
+/*
 JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
 Höfundur: Snorri Agnarsson, janúar 2017
 
@@ -10,7 +10,7 @@ java MicroMorphoParser inntaksskrá > úttaksskrá
 Einnig má nota forritið 'make', ef viðeigandi 'makefile'
 er til staðar:
 make test
-**/
+*/
 
 import java.util.Vector;
 import java.util.HashMap;
@@ -31,10 +31,11 @@ public class MicroMorphoParser{
 
 	static public void main( String[] args ) throws Exception
 	{
+		Object[] code = null;
 		try
 		{
 			MicroMorphoFlex.startLex(args[0]);
-			program();
+			code = program();
 		}
 		catch( Throwable e )
 		{
@@ -84,7 +85,7 @@ public class MicroMorphoParser{
 		return res;
 	}
 
-	public static void program() throws Exception {
+	public static Object[] program() throws Exception {
 
 		while (getToken1() != 0) {
 			function();
@@ -92,7 +93,7 @@ public class MicroMorphoParser{
 	}
 
 
-	public static void function() throws Exception {
+	public static Object[] function() throws Exception {
 		varCount = 0;
     	varTable = new HashMap<String,Integer>();
 
@@ -121,7 +122,7 @@ public class MicroMorphoParser{
 		over('}');
 	}
 
-	public static void expr() throws Exception {
+	public static Object[] expr() throws Exception {
 		if(getToken1() == RETURN){
 			over(RETURN);
 			expr();
@@ -136,7 +137,7 @@ public class MicroMorphoParser{
 		}
 	}
 
-	public static void binopexpr() throws Exception {
+	public static Objec[] binopexpr() throws Exception {
 		smallexpr();
 		while(getToken1() == OPERATOR){
 			over(OPERATOR);
@@ -145,7 +146,7 @@ public class MicroMorphoParser{
 
 	}
 
-	public static void smallexpr() throws Exception {
+	public static Object[] smallexpr() throws Exception {
 		if(getToken1()==NAME){
 			over(NAME);
 			if(getToken1() == '(') {
@@ -201,7 +202,7 @@ public class MicroMorphoParser{
 	}
 
 
-	public static void decl() throws Exception {
+	public static int decl() throws Exception {
 
 		over(VAR);
 		over(NAME);
@@ -211,7 +212,7 @@ public class MicroMorphoParser{
 			}		
 	}
 
-	public static void body() throws Exception {
+	public static Object[] body() throws Exception {
 		over('{');
 		while (getToken1() != '}') {
 			expr();
