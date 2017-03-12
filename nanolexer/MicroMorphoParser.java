@@ -37,9 +37,9 @@ public class MicroMorphoParser{
 		{
 			MicroMorphoFlex.startLex(args[0]);
 
-			Object[] code = program();
+			code = program();
 			System.out.println("Millithulu Objectid: " + Arrays.deepToString(code));
-			generateProgram(code);
+			generateProgram("myprogram" ,code);
 
 		}
 		catch( Throwable e )
@@ -229,8 +229,7 @@ public class MicroMorphoParser{
 	}
 
 
-	public static int decl() throws Exception {
-
+	public static void decl() throws Exception {
 		over(VAR);
 		addVar(over(NAME));
 			while(getToken1() == ',') {
@@ -250,26 +249,30 @@ public class MicroMorphoParser{
 		return new Object[]{"BODY", b.toArray()};
 	}
 
+	public static void emit(String line){
+		System.out.println(line);
+	}
+
 	public static void generateProgram(String name, Object[] code){
 		emit("\" "+name+" .mexe\" = main in");
 		emit("!{{");
-		for( int i = 0 ; i!=p.length ; i++) generateFunction((Object[])p[i]);
+		for( int i = 0 ; i!=code.length ; i++) generateFunction((Object[])code[i]);
 		emit("}}*BASIS");
 	}
-	Object[]{"bull"};
 
 	public static void generateFunction(Object[] f){
 		//f {fName, parCount, varCount, expr()};
 		String fname = (String)f[0];
 		int parCount = (Integer)f[1];
 		int varCount = (Integer)f[2];
-		emit("#\""+fname+"[f"+count+"]\" =");
+		emit("#\""+fname+"[f"+parCount+"]\" =");
 		emit("[");
 		generateExpr((Object[])f[3]);
 		emit("]");
 	}
 	public static void generateExpr(Object[] e){
-		
+/*		switch((CodeType)e[0]){
+		}*/
 	}
 }
 //{núll eða fleiri} [optional]
