@@ -15,6 +15,7 @@ make test
 import java.util.Vector;
 import java.util.HashMap;
 import java.util.Arrays;
+import static java.lang.System.out;
 
 public class MicroMorphoParser{
 
@@ -37,9 +38,9 @@ public class MicroMorphoParser{
 		{
 			MicroMorphoFlex.startLex(args[0]);
 
-			Object[] code = program();
+			code = program();
 			System.out.println("Millithulu Objectid: " + Arrays.deepToString(code));
-			generateProgram(code);
+			generateProgram(args[0], code);
 
 		}
 		catch( Throwable e )
@@ -229,14 +230,14 @@ public class MicroMorphoParser{
 	}
 
 
-	public static int decl() throws Exception {
+	public static void decl() throws Exception {
 
 		over(VAR);
 		addVar(over(NAME));
 			while(getToken1() == ',') {
 				over(',');
 				addVar(over(NAME));
-			}		
+			}
 	}
 
 	public static Object[] body() throws Exception {
@@ -250,26 +251,42 @@ public class MicroMorphoParser{
 		return new Object[]{"BODY", b.toArray()};
 	}
 
-	public static void generateProgram(String name, Object[] code){
-		emit("\" "+name+" .mexe\" = main in");
-		emit("!{{");
+	public static void generateProgram(String filename, Object[] p){
+		String pName = filename.substring(0,filename.indexOf('.'));
+		out.println("\""+pName+".mexe\" = main in");
+		out.println("!{{");
 		for( int i = 0 ; i!=p.length ; i++) generateFunction((Object[])p[i]);
-		emit("}}*BASIS");
+		out.println("}}*BASIS");
 	}
-	Object[]{"bull"};
 
 	public static void generateFunction(Object[] f){
 		//f {fName, parCount, varCount, expr()};
 		String fname = (String)f[0];
 		int parCount = (Integer)f[1];
 		int varCount = (Integer)f[2];
-		emit("#\""+fname+"[f"+count+"]\" =");
-		emit("[");
+		out.println("#\""+fname+"[f"+parCount+"]\" =");
+		out.println("[");
 		generateExpr((Object[])f[3]);
-		emit("]");
+		out.println("]");
 	}
 	public static void generateExpr(Object[] e){
-		
+		switch( (String) e[0]){
+			case "RETURN":
+			case "STORE":
+
+			case "NAME":
+				//e = {NAME,name}
+				emit ("(FetchP"+e[1]+")");
+				return;
+			case "LITERAL":
+				//e = { LITERAL , l i t e r a l } 537
+				emit ("(Make ValR "+(String)e[1]+")");
+				return;
+			case "IF":
+			case "CALL":
+			case "":
+
+		}	
 	}
 }
 //{núll eða fleiri} [optional]
