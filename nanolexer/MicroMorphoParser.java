@@ -15,7 +15,7 @@ make test
 import java.util.Vector;
 import java.util.HashMap;
 import java.util.Arrays;
-import static java.lang.System.out;
+
 
 public class MicroMorphoParser{
 
@@ -40,6 +40,7 @@ public class MicroMorphoParser{
 
 			code = program();
 			System.out.println("Millithulu Objectid: " + Arrays.deepToString(code));
+
 			generateProgram(args[0], code);
 
 		}
@@ -251,12 +252,17 @@ public class MicroMorphoParser{
 		return new Object[]{"BODY", b.toArray()};
 	}
 
-	public static void generateProgram(String filename, Object[] p){
-		String pName = filename.substring(0,filename.indexOf('.'));
-		out.println("\""+pName+".mexe\" = main in");
-		out.println("!{{");
-		for( int i = 0 ; i!=p.length ; i++) generateFunction((Object[])p[i]);
-		out.println("}}*BASIS");
+
+	public static void emit(String line){
+		System.out.println(line);
+	}
+
+	public static void generateProgram(String name, Object[] code){
+		String pName = name.substring(0,name.indexOf('.'));
+		emit("\""+pName+".mexe\" = main in");
+		emit("!{{");
+		for( int i = 0 ; i!=code.length ; i++) generateFunction((Object[])code[i]);
+		emit("}}*BASIS");
 	}
 
 	public static void generateFunction(Object[] f){
@@ -264,29 +270,59 @@ public class MicroMorphoParser{
 		String fname = (String)f[0];
 		int parCount = (Integer)f[1];
 		int varCount = (Integer)f[2];
-		out.println("#\""+fname+"[f"+parCount+"]\" =");
-		out.println("[");
-		generateExpr((Object[])f[3]);
-		out.println("]");
+
+		emit("#\""+fname+"[f"+parCount+"]\" =");
+		emit("[");	
+		//System.out.println(f[0]);
+		Object[] exprObj = (Object[])f[3];
+		System.out.println(Arrays.deepToString(exprObj));
+		for( int i = 0 ; i!=exprObj.length ; i++) generateExpr((Object[])exprObj[i]);
+		
+		emit("]");
 	}
 	public static void generateExpr(Object[] e){
-		switch( (String) e[0]){
+		//String tag = e[0];
+		switch((String)e[0]){
 			case "RETURN":
+				generateExpr((Object[])e[1]);
+				emit("(Return)");
+				return;
 			case "STORE":
-
+				generateExpr((Object[])e[2]);
+				emit("(StoreP "+e[1]+")");
+				return;
 			case "NAME":
 				//e = {NAME,name}
-				emit ("(FetchP"+e[1]+")");
+				System.out.println("name");
+				emit("(FetchP"+e[1]+")");
 				return;
 			case "LITERAL":
 				//e = { LITERAL , l i t e r a l } 537
-				emit ("(Make ValR "+(String)e[1]+")");
+				emit("(Make ValR "+(String)e[1]+")");
+				emit("(Push)");
 				return;
-			case "IF":
-			case "CALL":
-			case "":
+			case "IFS":
+				Object[] ifObj = (Object[])e[1];
+				generateExpr(ifObj[1]);
+				
+				//óklárað				
 
-		}	
+				return;
+			case "CALL":
+				Object[] args = (Object[])e[2];
+				int i;
+				for(i=0; i!=args.length; i++){
+					generateExpr((Object[])args[i]);
+				}
+				emit("(Call #\""+e[1]+"[f"+i+"]\" "+i+")");
+				return;
+			case "VARCALL":
+				emit("(Fetch "+e[1]+")");
+			
+			default: 
+				return;
+		}
+
 	}
 }
 //{núll eða fleiri} [optional]
