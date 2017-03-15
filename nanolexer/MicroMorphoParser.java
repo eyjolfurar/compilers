@@ -210,18 +210,18 @@ public class MicroMorphoParser{
 
 		else if(getToken1()==IF){
 			over(IF);
-			Object[] els = new Object[]{};
-			Object[] i = new Object[]{"IF", expr(), body()};
+			Object els = null;
+			Object[] i = new Object[]{expr(), body()};
 			Vector<Object> ei = new Vector<Object>();
 			while(getToken1()==ELSEIF){
 				over(ELSEIF);
-				ei.add(new Object[]{"ELSEIF", expr(), body()});
+				ei.add(new Object[]{expr(), body()});
 			}
 			if(getToken1()==ELSE){
 				over(ELSE);
-				els = new Object[]{"ELSE", body()};
+				els = body();
 			}
-			return new Object[]{"IFS", i, ei.toArray(), els}; 
+			return new Object[]{"IF", i, ei.toArray(), els}; 
 		}
 
 		else{
@@ -256,6 +256,11 @@ public class MicroMorphoParser{
 	public static void emit(String line){
 		System.out.println(line);
 	}
+	
+	private static int uniLab = 0;
+	public static int newLab(){
+		return uniLab++;
+	}
 
 	public static void generateProgram(String name, Object[] code){
 		String pName = name.substring(0,name.indexOf('.'));
@@ -280,6 +285,7 @@ public class MicroMorphoParser{
 		
 		emit("]");
 	}
+
 	public static void generateExpr(Object[] e){
 		//String tag = e[0];
 		switch((String)e[0]){
@@ -289,25 +295,43 @@ public class MicroMorphoParser{
 				return;
 			case "STORE":
 				generateExpr((Object[])e[2]);
-				emit("(StoreP "+e[1]+")");
+				emit("(Store "+e[1]+")");
 				return;
 			case "NAME":
 				//e = {NAME,name}
 				System.out.println("name");
-				emit("(FetchP"+e[1]+")");
+				emit("(Fetch "+e[1]+")");
 				return;
 			case "LITERAL":
-				//e = { LITERAL , l i t e r a l } 537
-				emit("(Make ValR "+(String)e[1]+")");
-				emit("(Push)");
+				//e = { LITERAL , literal}
+				emit("(MakeVal "+(String)e[1]+")");
 				return;
-			case "IFS":
+			case "IF":
+				System.out.println(Arrays.deepToString(e));
+				int labElse = newLab();
+				int labEnd = newLab();
 				Object[] ifObj = (Object[])e[1];
-				generateExpr(ifObj[1]);
-				
-				//óklárað				
-
+				Object[] eIfArray = (Object[])e[2];
+				Object[] els = (Object[])e[3];
+				generateExpr((Object[])ifObj[0]);
+				emit("(GoFalse _"+ labElse +")");
+				generateBody((Object[])ifObj[1]);
+				emit ("(Go _"+labEnd +")");
+				emit("_"+labElse+":");
+				int labTemp;
+				for(int i=0; i<eIfArray.length; i++){
+					labTemp = newLab();
+					Object[] elsIf = (Object[])eIfArray[i];
+					generateExpr((Object[])elsIf[0]);
+					emit("(GoFalse _"+ labTemp +")");
+					generateBody((Object[])elsIf[1]);
+					emit ("(Go _"+labEnd +")");
+					emit("_"+labTemp+":");
+				}
+				if(els.length != 0) generateBody((Object[])els[0]);
+				emit("_"+labEnd+":");
 				return;
+
 			case "CALL":
 				Object[] args = (Object[])e[2];
 				int i;
@@ -318,12 +342,15 @@ public class MicroMorphoParser{
 				return;
 			case "VARCALL":
 				emit("(Fetch "+e[1]+")");
-			
-			default: 
+			default:
 				return;
 		}
-
 	}
+
+	public static void generateBody(Object[] e){
+		System.out.println("tetta er ekki setning");
+	}
+
 }
 //{núll eða fleiri} [optional]
 /*

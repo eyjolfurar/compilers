@@ -1,16 +1,4 @@
-/*
-	JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
-	Höfundur: Snorri Agnarsson, janúar 2017
 
-	Þennan lesgreini má þýða og keyra með skipununum
-
-		java -jar JFlex-1.6.1.jar micromorphoflexer.jflex
-		javac MicroMorphoFlex.java MicroMorphoParser.java
-		java MicroMorphoFlex inntaksskrá > úttaksskrá
-	Einnig má nota forritið 'make', ef viðeigandi 'makefile'
-	er til staðar:
-		make test
- */
 
 import java.io.*;
 
@@ -133,7 +121,7 @@ private static String tokname( int tok )
 	case MicroMorphoParser.ELSE:
 		return "else";
 	case MicroMorphoParser.ELSEIF:
-		return "elsif";
+		return "elseif";
 	case MicroMorphoParser.WHILE:
 		return "while";
 	case MicroMorphoParser.VAR:

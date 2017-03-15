@@ -10,9 +10,18 @@ skritid() {
 	kona = 1 * 4 * 10;
 	if  (7 + 7)	 
 	{
-		while  (kona)
-		{
-			return 17 + 10;
-		};
+		1+2;
+	}
+	elseif (7+7)
+	{
+		1+2;
+	}
+	elseif (7+7)
+	{
+		1+2;
+	}
+	else
+	{
+		1+2;
 	};
 }
