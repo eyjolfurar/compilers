@@ -39,8 +39,8 @@ public class MicroMorphoParser{
 			MicroMorphoFlex.startLex(args[0]);
 
 			code = program();
-			System.out.println("paeling");
-			System.out.println("Millithulu Objectid: " + Arrays.deepToString(code));
+			//System.out.println("paeling");
+			//System.out.println("Millithulu Objectid: " + Arrays.deepToString(code));
 
 			generateProgram(args[0], code);
 
@@ -54,17 +54,17 @@ public class MicroMorphoParser{
 	private static int getToken1(){
 		return MicroMorphoFlex.getToken1();
 	}
-	
+
 	private static int getToken2(){
 		return MicroMorphoFlex.getToken2();
 	}
-	
+
 	private static String getLexeme(){
 		return MicroMorphoFlex.getFirstLex();
 	}
 	/*
 	private static String getNextLexeme(){
-		return MicroMorphoFlex.getNextLexeme();
+	return MicroMorphoFlex.getNextLexeme();
 	}
 	*/
 	private static void advance() throws Exception {
@@ -96,7 +96,7 @@ public class MicroMorphoParser{
 	}
 
 	public static Object[] program() throws Exception {
-		
+
 		Vector<Object> a = new Vector<Object>();
 
 		while (getToken1() != 0) {
@@ -108,7 +108,7 @@ public class MicroMorphoParser{
 
 	public static Object[] function() throws Exception {
 		varCount = 0;
-    varTable = new HashMap<String,Integer>();
+		varTable = new HashMap<String,Integer>();
 
 		String fName = over(NAME); //geyma nafnið
 
@@ -162,7 +162,7 @@ public class MicroMorphoParser{
 		while(getToken1() == OPERATOR){
 
 			String op = over(OPERATOR);
-			
+
 			e = new Object[]{"CALL", op, e, smallexpr()};
 
 		}
@@ -174,220 +174,227 @@ public class MicroMorphoParser{
 			String c = over(NAME);
 			if(getToken1() == '(') {
 				over('(');
-					Vector<Object> v = new Vector<Object>();
+				Vector<Object> v = new Vector<Object>();
 				while(getToken1()!=')'){
 					v.add(expr());
 					if( getToken1() == ')' ) break;
-					over(',');				
+					over(',');
 				}
 				over(')');
 				return new Object[] {"FUNCALL",c, v.toArray()};
-			} else { 
+			} else {
 				int pos = findVar(c);
-				return new Object[]{"VARCALL", pos}; }
+				return new Object[]{"FETCH", pos}; }
 
-		}
-
-		else if(getToken1()==WHILE){
-			over(WHILE);
-			Object[] e = expr();
-			Object[] b = body();
-			return new Object[]{"WHILE", e, b};
-		}
-
-		else if(getToken1()==OPERATOR){
-			String op = over(OPERATOR);
-			return new Object[] {"OPERATOR", op, smallexpr()};
-		}
-
-		else if(getToken1()==LITERAL){
-			String lit = over(LITERAL);
-			return new Object[]{"LITERAL", lit};
-		}
-
-		else if(getToken1() == '('){
-			over('(');
-			Object[] e = {expr()};
-			over(')');
-			return e;
-		}
-
-		else if(getToken1()==IF){
-			over(IF);
-			Object els = null;
-			Object[] i = new Object[]{expr(), body()};
-			Vector<Object> ei = new Vector<Object>();
-			while(getToken1()==ELSEIF){
-				over(ELSEIF);
-				ei.add(new Object[]{expr(), body()});
 			}
-			if(getToken1()==ELSE){
-				over(ELSE);
-				els = body();
+
+			else if(getToken1()==WHILE){
+				over(WHILE);
+				Object[] e = expr();
+				Object[] b = body();
+				return new Object[]{"WHILE", e, b};
 			}
-			return new Object[]{"IF", i, ei.toArray(), els}; 
+
+			else if(getToken1()==OPERATOR){
+				String op = over(OPERATOR);
+				return new Object[] {"OPERATOR", op, smallexpr()};
+			}
+
+			else if(getToken1()==LITERAL){
+				String lit = over(LITERAL);
+				return new Object[]{"LITERAL", lit};
+			}
+
+			else if(getToken1() == '(' )
+			{
+				over('(');
+				Object[] e = expr();
+				over(')');
+				return e;
+			}
+
+			else if(getToken1()==IF){
+				over(IF);
+				Object els = null;
+				Object[] i = new Object[]{expr(), body()};
+				Vector<Object> ei = new Vector<Object>();
+				while(getToken1()==ELSEIF){
+					over(ELSEIF);
+					ei.add(new Object[]{expr(), body()});
+				}
+				if(getToken1()==ELSE){
+					over(ELSE);
+					els = body();
+				}
+				return new Object[]{"IF", i, ei.toArray(), els};
+			}
+
+			else{
+				MicroMorphoFlex.expected("expression");
+			}
+			return null;
 		}
 
-		else{
-			MicroMorphoFlex.expected("expression");	
-		}
-		return null;
-	}
 
+		public static void decl() throws Exception {
 
-	public static void decl() throws Exception {
-
-		over(VAR);
-		addVar(over(NAME));
+			over(VAR);
+			addVar(over(NAME));
 			while(getToken1() == ',') {
 				over(',');
 				addVar(over(NAME));
 			}
-	}
-
-	public static Object[] body() throws Exception {
-		over('{');
-		Vector<Object> b = new Vector<Object>();
-		while (getToken1() != '}') {
-			b.add(expr());
-			over(';');
 		}
-		over('}');
-		return new Object[]{"BODY", b.toArray()};
-	}
+
+		public static Object[] body() throws Exception {
+			over('{');
+			Vector<Object> b = new Vector<Object>();
+			while (getToken1() != '}') {
+				b.add(expr());
+				over(';');
+			}
+			over('}');
+			return new Object[]{"BODY", b.toArray()};
+		}
 
 
-	public static void emit(String line){
-		System.out.println(line);
-	}
-	
-	private static int uniLab = 0;
-	public static int newLab(){
-		return uniLab++;
-	}
+		public static void emit(String line){
+			System.out.println(line);
+		}
 
-	public static void generateProgram(String name, Object[] code){
-		String pName = name.substring(0,name.indexOf('.'));
-		emit("\""+pName+".mexe\" = main in");
-		emit("!{{");
-		for( int i = 0 ; i!=code.length ; i++) generateFunction((Object[])code[i]);
-		emit("}}*BASIS");
-	}
+		private static int uniLab = 0;
+		public static int newLab(){
+			return uniLab++;
+		}
 
-	public static void generateFunction(Object[] f){
-		//f {fName, parCount, varCount, expr()};
-		String fname = (String)f[0];
-		int parCount = (Integer)f[1];
-		int varCount = (Integer)f[2];
+		public static void generateProgram(String name, Object[] code){
+			String pName = name.substring(0,name.indexOf('.'));
+			emit("\""+pName+".mexe\" = main in");
+			emit("!{{");
+			for( int i = 0 ; i!=code.length ; i++) generateFunction((Object[])code[i]);
+			emit("}}*BASIS;");
+		}
 
-		emit("#\""+fname+"[f"+parCount+"]\" =");
-		emit("[");	
-		//System.out.println(f[0]);
-		Object[] exprObj = (Object[])f[3];
-		System.out.println(Arrays.deepToString(exprObj));
-		for( int i = 0 ; i!=exprObj.length ; i++) generateExpr((Object[])exprObj[i]);
-		
-		emit("]");
-	}
+		public static void generateFunction(Object[] f){
+			//f {fName, parCount, varCount, expr()};
+			String fname = (String)f[0];
+			int parCount = (Integer)f[1];
+			int varCount = (Integer)f[2];
 
-	public static void generateExpr(Object[] e){
-		//String tag = e[0];
-		switch((String)e[0]){
-			case "RETURN":
-				generateExpr((Object[])e[1]);
-				emit("(Return)");
-				return;
-			case "STORE":
-				generateExpr((Object[])e[2]);
-				emit("(Store "+e[1]+")");
-				return;
-			case "NAME":
-				//e = {NAME,name}
-				System.out.println("name");
-				emit("(Fetch "+e[1]+")");
-				return;
-			case "LITERAL":
-				//e = { LITERAL , literal}
-				emit("(MakeVal "+(String)e[1]+")");
-				return;
-			case "IF":
-				//System.out.println(Arrays.deepToString(e));
-				int labElse = newLab();
-				int labEnd = newLab();
-				Object[] ifObj = (Object[])e[1];
-				Object[] eIfArray = (Object[])e[2];
-				Object[] els = (Object[])e[3];
-				System.out.println(Arrays.deepToString(ifObj));
-				generateExpr((Object[])ifObj[0]);
-				System.out.println("vid komumst ekki hingad");
-				emit("(GoFalse _"+ labElse +")");
-				generateBody((Object[])ifObj[1]);
-				emit ("(Go _"+labEnd +")");
-				emit("_"+labElse+":");
-				int labTemp;
-				for(int i=0; i<eIfArray.length; i++){
-					labTemp = newLab();
-					Object[] elsIf = (Object[])eIfArray[i];
-					generateExpr((Object[])elsIf[0]);
-					emit("(GoFalse _"+ labTemp +")");
-					generateBody((Object[])elsIf[1]);
+			emit("#\""+fname+"[f"+parCount+"]\" =");
+			emit("[");
+			for(int i = 0; i < varCount; i++){
+				emit("(Fetch " + i + ")");
+				emit("(Push)");
+			}
+			//System.out.println(f[0]);
+			Object[] exprObj = (Object[])f[3];
+			//System.out.println(Arrays.deepToString(exprObj));
+			for( int i = 0 ; i!=exprObj.length ; i++) generateExpr((Object[])exprObj[i]);
+
+			emit("];");
+		}
+
+		public static void generateExpr(Object[] e){
+			//String tag = e[0];
+			switch((String)e[0]){
+				case "RETURN":
+					generateExpr((Object[])e[1]);
+					emit("(Return)");
+					return;
+				case "STORE":
+					generateExpr((Object[])e[2]);
+					emit("(Store "+e[1]+")");
+					return;
+				case "NAME":
+					//e = {NAME,name}
+					//System.out.println("name");
+					emit("(Fetch "+e[1]+")");
+					return;
+				case "LITERAL":
+					//e = { LITERAL , literal}
+					emit("(MakeVal "+(String)e[1]+")");
+					return;
+				case "IF":
+					//System.out.println(Arrays.deepToString(e));
+					int labElse = newLab();
+					int labEnd = newLab();
+					Object[] ifObj = (Object[])e[1];
+					Object[] eIfArray = (Object[])e[2];
+					Object[] els = (Object[])e[3];
+					//System.out.println(Arrays.deepToString(ifObj));
+					generateExpr((Object[])ifObj[0]);
+					//System.out.println("vid komumst ekki hingad");
+					emit("(GoFalse _"+ labElse +")");
+					generateBody((Object[])ifObj[1]);
 					emit ("(Go _"+labEnd +")");
-					emit("_"+labTemp+":");
-				}
-				if(els.length != 0) generateBody((Object[])els[0]);
-				emit("_"+labEnd+":");
-				return;
-
-			case "CALL":
-				int i;
-				for(i=2; i!=e.length; i++){
-					generateExpr((Object[])e[i]);
-				}
-				emit("(Call #\""+e[1]+"[f"+(i-2)+"]\" "+(i-2)+")");
-				return;
-			case "VARCALL":
-				emit("(Fetch "+e[1]+")");
-			default:
-				return;
+					emit("_"+labElse+":");
+					int labTemp;
+					for(int i=0; i<eIfArray.length; i++){
+						labTemp = newLab();
+						Object[] elsIf = (Object[])eIfArray[i];
+						generateExpr((Object[])elsIf[0]);
+						emit("(GoFalse _"+ labTemp +")");
+						generateBody((Object[])elsIf[1]);
+						emit ("(Go _"+labEnd +")");
+						emit("_"+labTemp+":");
+					}
+					//emit(deepToString(els[0]));
+					if(els.length != 0) generateBody(els);
+					emit("_"+labEnd+":");
+					return;
+				case "CALL":
+					// e = {call, op, args[1], args[2]}
+					int i;
+					for(i=2; i!=e.length; i++){
+						generateExpr((Object[])e[i]);
+						if (i < (e.length-1)) emit("(Push)");
+					}
+					emit("(Call #\""+e[1]+"[f"+(i-2)+"]\" "+(i-2)+")");
+					return;
+				case "FETCH":
+					emit("(Fetch "+e[1]+")");
+				default:
+					return;
+			}
 		}
+
+		public static void generateBody(Object[] e){
+			//System.out.println("tetta er ekki setning");
+		}
+
 	}
+	//{núll eða fleiri} [optional]
+	/*
+	program		=	{ function }
+	;
 
-	public static void generateBody(Object[] e){
-		System.out.println("tetta er ekki setning");
-	}
+	function	= 	NAME, '(', [ NAME, { ',', NAME } ] ')'
+	'{', { decl, ';' }, { expr, ';' }, '}'
+	;
 
-}
-//{núll eða fleiri} [optional]
-/*
-program		=	{ function }
-;
+	decl		=	'var', NAME, { ',', NAME }
+	;
 
-function	= 	NAME, '(', [ NAME, { ',', NAME } ] ')'
-'{', { decl, ';' }, { expr, ';' }, '}'
-;
+	expr		=	'return', expr
+	|	NAME, '=', expr
+	|	binopexpr
+	;
 
-decl		=	'var', NAME, { ',', NAME }
-;
+	binopexpr	=	bioexpr, { OPNAME, smallexpr }
 
-expr		=	'return', expr
-|	NAME, '=', expr
-|	binopexpr
-;
+	E -> E + T | T
+	;
 
-binopexpr	=	bioexpr, { OPNAME, smallexpr }
+	smallexpr	=	NAME
+	|	NAME, '(', [ expr, { ',', expr } ], ')' fun(hundur, 2 3)
+	|	OPNAME, smallexpr
+	| 	LITERAL
+	|	'(', expr, ')'
+	|	'if', expr, body, { 'elsif', expr, body }, [ 'else', body ]
+	|	'while', expr, body
+	;
 
-E -> E + T | T
-;
-
-smallexpr	=	NAME
-|	NAME, '(', [ expr, { ',', expr } ], ')' fun(hundur, 2 3)
-|	OPNAME, smallexpr
-| 	LITERAL
-|	'(', expr, ')'
-|	'if', expr, body, { 'elsif', expr, body }, [ 'else', body ]
-|	'while', expr, body
-;
-
-body		=	'{', { expr, ';' }, '}'
-;
-*/
+	body		=	'{', { expr, ';' }, '}'
+	;
+	*/
