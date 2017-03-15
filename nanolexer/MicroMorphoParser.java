@@ -39,6 +39,7 @@ public class MicroMorphoParser{
 			MicroMorphoFlex.startLex(args[0]);
 
 			code = program();
+			System.out.println("paeling");
 			System.out.println("Millithulu Objectid: " + Arrays.deepToString(code));
 
 			generateProgram(args[0], code);
@@ -46,6 +47,7 @@ public class MicroMorphoParser{
 		}
 		catch( Throwable e )
 		{
+			System.out.println("nope");
 			System.out.println(e.getMessage());
 		}
 	}
@@ -153,13 +155,15 @@ public class MicroMorphoParser{
 
 
 	public static Object[] binopexpr() throws Exception {
+		if(getToken2() != OPERATOR){
+			return smallexpr();
+		}
 		Object[] e = smallexpr();
-
 		while(getToken1() == OPERATOR){
 
 			String op = over(OPERATOR);
 			
-			e = new Object[]{"CALL", op, new Object[]{e, smallexpr()}};
+			e = new Object[]{"CALL", op, e, smallexpr()};
 
 		}
 		return e;
@@ -307,13 +311,15 @@ public class MicroMorphoParser{
 				emit("(MakeVal "+(String)e[1]+")");
 				return;
 			case "IF":
-				System.out.println(Arrays.deepToString(e));
+				//System.out.println(Arrays.deepToString(e));
 				int labElse = newLab();
 				int labEnd = newLab();
 				Object[] ifObj = (Object[])e[1];
 				Object[] eIfArray = (Object[])e[2];
 				Object[] els = (Object[])e[3];
+				System.out.println(Arrays.deepToString(ifObj));
 				generateExpr((Object[])ifObj[0]);
+				System.out.println("vid komumst ekki hingad");
 				emit("(GoFalse _"+ labElse +")");
 				generateBody((Object[])ifObj[1]);
 				emit ("(Go _"+labEnd +")");
@@ -333,12 +339,11 @@ public class MicroMorphoParser{
 				return;
 
 			case "CALL":
-				Object[] args = (Object[])e[2];
 				int i;
-				for(i=0; i!=args.length; i++){
-					generateExpr((Object[])args[i]);
+				for(i=2; i!=e.length; i++){
+					generateExpr((Object[])e[i]);
 				}
-				emit("(Call #\""+e[1]+"[f"+i+"]\" "+i+")");
+				emit("(Call #\""+e[1]+"[f"+(i-2)+"]\" "+(i-2)+")");
 				return;
 			case "VARCALL":
 				emit("(Fetch "+e[1]+")");
@@ -369,7 +374,9 @@ expr		=	'return', expr
 |	binopexpr
 ;
 
-binopexpr	=	smallexpr, { OPNAME, smallexpr }
+binopexpr	=	bioexpr, { OPNAME, smallexpr }
+
+E -> E + T | T
 ;
 
 smallexpr	=	NAME
