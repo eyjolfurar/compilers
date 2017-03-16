@@ -294,6 +294,7 @@ public class MicroMorphoParser{
 			emit("];");
 		}
 
+
 		public static void generateExpr(Object[] e){
 			//String tag = e[0];
 			switch((String)e[0]){
@@ -320,7 +321,7 @@ public class MicroMorphoParser{
 					generateExpr((Object[])ifObj[0]);
 					//System.out.println("vid komumst ekki hingad");
 					emit("(GoFalse _"+ labElse +")");
-					generateBody((Object[])ifObj[1]);
+					generateBody((Object[])ifObj[1]);d
 					emit ("(Go _"+labEnd +")");
 					emit("_"+labElse+":");
 					int labTemp;
