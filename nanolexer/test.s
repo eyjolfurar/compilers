@@ -7,25 +7,28 @@ kallinn ( kaffi , bull , drasl ) {
 	return party;
 }
 main() {
-	var kona;
-	var furduleg;
-	kona = 1 * 4 * 10;
+	var kona, boner;
+	var nytt, furduleg, counter;
+	kona = true;
+	furduleg = false;
+	boner = true;
+	counter = 0;
 
-	if  (1 > 2)
+	if  (kona || furduleg)
 	{
-		1+2;
-		4+2;
-	}
-	elseif (7 > 7)
-	{
-		1+2;
-	}
-	elseif (7>7)
-	{
-		1+2;
-	}
-	else
-	{
-		1+2;
+		counter = counter +1;
+		writeln counter;
 	};
+	if (kona &&  boner)
+	{
+		counter = counter +1;
+		writeln counter;
+	};
+	if (!furduleg)
+	{
+		counter = counter +1;
+		writeln counter;
+	};
+	writeln "fag";
+	return kona;
 }

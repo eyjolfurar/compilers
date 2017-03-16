@@ -1,0 +1,85 @@
+"test.mexe" = main in
+!{{
+#"kallinn[f3]" =
+[
+(MakeVal null)
+(Push)
+(Push)
+(Push)
+(Push)
+(MakeVal 1)
+(Push)
+(MakeVal 2)
+(Call #"+[f2]" 2)
+(Push)
+(MakeVal 3)
+(Call #"+[f2]" 2)
+(Store 5)
+(Fetch 5)
+(Return)
+];
+#"main[f0]" =
+[
+(MakeVal null)
+(Push)
+(Push)
+(Push)
+(Push)
+(Push)
+(MakeVal true)
+(Store 0)
+(MakeVal false)
+(Store 3)
+(MakeVal true)
+(Store 1)
+(MakeVal 0)
+(Store 4)
+(Fetch 0)
+(GoTrue _4)
+(Fetch 3)
+_4:
+(GoFalse _2)
+(Fetch 4)
+(Push)
+(MakeVal 1)
+(Call #"+[f2]" 2)
+(Store 4)
+(Fetch 4)
+(Call #"writeln[f1]" 1)
+(Go _3)
+_2:
+_3:
+(Fetch 0)
+(GoFalse _9)
+(Fetch 1)
+_9:
+(GoFalse _7)
+(Fetch 4)
+(Push)
+(MakeVal 1)
+(Call #"+[f2]" 2)
+(Store 4)
+(Fetch 4)
+(Call #"writeln[f1]" 1)
+(Go _8)
+_7:
+_8:
+(Fetch 3)
+(Not)
+(GoFalse _12)
+(Fetch 4)
+(Push)
+(MakeVal 1)
+(Call #"+[f2]" 2)
+(Store 4)
+(Fetch 4)
+(Call #"writeln[f1]" 1)
+(Go _13)
+_12:
+_13:
+(MakeVal "fag")
+(Call #"writeln[f1]" 1)
+(Fetch 0)
+(Return)
+];
+}}*BASIS;

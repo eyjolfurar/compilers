@@ -184,56 +184,56 @@ public class MicroMorphoParser{
 				return new Object[] {"FUNCALL",c, v.toArray()};
 			} else {
 				int pos = findVar(c);
-				return new Object[]{"FETCH", pos}; }
-
+				return new Object[]{"FETCH", pos};
 			}
-
-			else if(getToken1()==WHILE){
-				over(WHILE);
-				Object[] e = expr();
-				Object[] b = body();
-				return new Object[]{"WHILE", e, b};
-			}
-
-			else if(getToken1()==OPERATOR){
-				String op = over(OPERATOR);
-				return new Object[] {"OPERATOR", op, smallexpr()};
-			}
-
-			else if(getToken1()==LITERAL){
-				String lit = over(LITERAL);
-				return new Object[]{"LITERAL", lit};
-			}
-
-			else if(getToken1() == '(' )
-			{
-				over('(');
-				Object[] e = expr();
-				over(')');
-				return e;
-			}
-
-			else if(getToken1()==IF){
-				over(IF);
-				Object els = null;
-				Object[] i = new Object[]{expr(), body()};
-				Vector<Object> ei = new Vector<Object>();
-				while(getToken1()==ELSEIF){
-					over(ELSEIF);
-					ei.add(new Object[]{expr(), body()});
-				}
-				if(getToken1()==ELSE){
-					over(ELSE);
-					els = body();
-				}
-				return new Object[]{"IF", i, ei.toArray(), els};
-			}
-
-			else{
-				MicroMorphoFlex.expected("expression");
-			}
-			return null;
 		}
+
+		else if(getToken1()==WHILE){
+			over(WHILE);
+			Object[] e = expr();
+			Object[] b = body();
+			return new Object[]{"WHILE", e, b};
+		}
+
+		else if(getToken1()==OPERATOR){
+			String op = over(OPERATOR);
+			return new Object[] {"CALL", op, smallexpr()};
+		}
+
+		else if(getToken1()==LITERAL){
+			String lit = over(LITERAL);
+			return new Object[]{"LITERAL", lit};
+		}
+
+		else if(getToken1() == '(' )
+		{
+			over('(');
+			Object[] e = expr();
+			over(')');
+			return e;
+		}
+
+		else if(getToken1()==IF){
+			over(IF);
+			Object els = null;
+			Object[] i = new Object[]{expr(), body()};
+			Vector<Object> ei = new Vector<Object>();
+			while(getToken1()==ELSEIF){
+				over(ELSEIF);
+				ei.add(new Object[]{expr(), body()});
+			}
+			if(getToken1()==ELSE){
+				over(ELSE);
+				els = body();
+			}
+			return new Object[]{"IF", i, ei.toArray(), els};
+		}
+
+		else{
+			MicroMorphoFlex.expected("expression");
+		}
+		return null;
+	}
 
 
 		public static void decl() throws Exception {
@@ -283,8 +283,8 @@ public class MicroMorphoParser{
 
 			emit("#\""+fname+"[f"+parCount+"]\" =");
 			emit("[");
+			emit("(MakeVal null)");	
 			for(int i = 0; i < varCount; i++){
-				emit("(Fetch " + i + ")");
 				emit("(Push)");
 			}
 			//System.out.println(f[0]);
@@ -305,11 +305,6 @@ public class MicroMorphoParser{
 				case "STORE":
 					generateExpr((Object[])e[2]);
 					emit("(Store "+e[1]+")");
-					return;
-				case "NAME":
-					//e = {NAME,name}
-					//System.out.println("name");
-					emit("(Fetch "+e[1]+")");
 					return;
 				case "LITERAL":
 					//e = { LITERAL , literal}
@@ -339,19 +334,37 @@ public class MicroMorphoParser{
 						emit ("(Go _"+labEnd +")");
 						emit("_"+labTemp+":");
 					}
-					//emit(deepToString(els[0]));
-					if(els.length != 0) generateBody(els);
+					if(els != null) generateBody(els);
 					emit("_"+labEnd+":");
 					return;
 				case "CALL":
-					// e = {call, op, args[1], args[2]}
-					int i;
-					for(i=2; i!=e.length; i++){
-						generateExpr((Object[])e[i]);
-						if (i < (e.length-1)) emit("(Push)");
-					}
-					emit("(Call #\""+e[1]+"[f"+(i-2)+"]\" "+(i-2)+")");
-					return;
+					int labJump = newLab();
+					switch((String)e[1]){
+						case "||":
+							generateExpr((Object[])e[2]);
+							emit("(GoTrue _"+labJump+")");
+							generateExpr((Object[])e[3]);
+							emit("_"+labJump+":");
+							return;
+						case "&&":
+							generateExpr((Object[])e[2]);
+							emit("(GoFalse _"+labJump+")");
+							generateExpr((Object[])e[3]);
+							emit("_"+labJump+":");
+							return;
+						case "!":
+							generateExpr((Object[])e[2]);
+							emit("(Not)");
+							return;
+						default:
+							int i;
+							for(i=2; i!=e.length; i++){
+								generateExpr((Object[])e[i]);
+								if (i < (e.length-1)) emit("(Push)");
+							}
+							emit("(Call #\""+e[1]+"[f"+(i-2)+"]\" "+(i-2)+")");
+							return;
+						}
 				case "FETCH":
 					emit("(Fetch "+e[1]+")");
 				default:
@@ -359,8 +372,12 @@ public class MicroMorphoParser{
 			}
 		}
 
-		public static void generateBody(Object[] e){
-			//System.out.println("tetta er ekki setning");
+		public static void generateBody(Object[] bod){
+			//System.out.println(Arrays.deepToString((Object[])bod[1]));
+			Object[] e = (Object[])bod[1];
+			for(int i = 0; i!=e.length; i++){
+				generateExpr((Object[])e[i]);
+			}
 		}
 
 	}
