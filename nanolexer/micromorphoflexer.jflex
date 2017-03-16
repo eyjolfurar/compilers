@@ -223,6 +223,11 @@ _OPERATOR= [\+\-*/!%&=><\:\^\~&|?]+
 	return VAR;
 }
 
+"writeln" {
+	lexeme2 = yytext();
+	return OPERATOR;
+}
+
 {_NAME} {
 	lexeme2 = yytext();
 	return NAME;
