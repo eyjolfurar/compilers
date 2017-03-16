@@ -6,8 +6,8 @@ Höfundar: mattisig, no pjé og Eyjó
 
 java -jar JFlex-1.6.1.jar micromorphoflexer.jflex
 javac MicroMorphoFlex.java MicroMorphoParser.java
-java MicroMorphoParser inntaksskrá > úttaksskrá
-java -jar morpho.jar -c test.mmod
+java MicroMorphoParser test.nm > test.masm
+java -jar morpho.jar -c test.masm
 java -jar morpho.jar test
 
 */
@@ -155,9 +155,6 @@ public class MicroMorphoParser{
 
 
 	public static Object[] binopexpr() throws Exception {
-		if(getToken2() != OPERATOR){
-			return smallexpr();
-		}
 		Object[] e = smallexpr();
 		while(getToken1() == OPERATOR){
 
@@ -282,7 +279,7 @@ public class MicroMorphoParser{
 
 			emit("#\""+fname+"[f"+parCount+"]\" =");
 			emit("[");
-			emit("(MakeVal null)");	
+			emit("(MakeVal null)");
 			for(int i = 0; i < varCount; i++){
 				emit("(Push)");
 			}
@@ -290,7 +287,7 @@ public class MicroMorphoParser{
 			Object[] exprObj = (Object[])f[3];
 			//System.out.println(Arrays.deepToString(exprObj));
 			for( int i = 0 ; i!=exprObj.length ; i++) generateExpr((Object[])exprObj[i]);
-
+			emit("(Return)");
 			emit("];");
 		}
 
@@ -321,7 +318,7 @@ public class MicroMorphoParser{
 					generateExpr((Object[])ifObj[0]);
 					//System.out.println("vid komumst ekki hingad");
 					emit("(GoFalse _"+ labElse +")");
-					generateBody((Object[])ifObj[1]);d
+					generateBody((Object[])ifObj[1]);
 					emit ("(Go _"+labEnd +")");
 					emit("_"+labElse+":");
 					int labTemp;
@@ -388,8 +385,8 @@ public class MicroMorphoParser{
 							emit("(Push)");
 						}
 					}
-					emit("(Call #\""+e[1]+"[f"+args.length+"]\" "+args.length+")");	
-					return;			
+					emit("(Call #\""+e[1]+"[f"+args.length+"]\" "+args.length+")");
+					return;
 				default:
 					return;
 
