@@ -313,6 +313,7 @@ public class MicroMorphoParser{
 				Object[] ifObj = (Object[])e[1];
 				Object[] eIfArray = (Object[])e[2];
 				Object[] els = (Object[])e[3];
+				
 				generateExpr((Object[])ifObj[0]);
 				emit("(GoFalse _"+ labElse +")");
 				generateBody((Object[])ifObj[1]);
