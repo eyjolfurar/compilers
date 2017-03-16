@@ -1,15 +1,15 @@
 /*
 JFlex lexgreiningardæmi byggt á lesgreini fyrir NanoLisp.
-Höfundur: Snorri Agnarsson, janúar 2017
+Höfundar: mattisig, no pjé og Eyjó
 
 Þennan lesgreini má þýða og keyra með skipununum
 
 java -jar JFlex-1.6.1.jar micromorphoflexer.jflex
 javac MicroMorphoFlex.java MicroMorphoParser.java
 java MicroMorphoParser inntaksskrá > úttaksskrá
-Einnig má nota forritið 'make', ef viðeigandi 'makefile'
-er til staðar:
-make test
+java -jar morpho.jar -c test.mmod
+java -jar morpho.jar test
+
 */
 
 import java.util.Vector;
@@ -257,7 +257,6 @@ public class MicroMorphoParser{
 			return new Object[]{"BODY", b.toArray()};
 		}
 
-
 		public static void emit(String line){
 			System.out.println(line);
 		}
@@ -367,8 +366,32 @@ public class MicroMorphoParser{
 						}
 				case "FETCH":
 					emit("(Fetch "+e[1]+")");
+					return;
+				case "WHILE":
+					//e = {"WHILE, expr(), body()}
+					int labStart = newLab();
+					int labFinish = newLab();
+					emit("_"+labStart+":");
+					generateExpr((Object[])e[1]);
+					emit("(GoFalse _"+labFinish+")");
+					generateBody((Object[])e[2]);
+					emit("(Go _"+labStart+")");
+					emit("_"+labFinish+":");
+					return;
+				case "FUNCALL":
+					//e = {"FUNCALL", funName, args[] }
+					Object[] args = (Object[])e[2];
+					for(int i = 0; i<args.length; i++){
+						generateExpr((Object[])args[i]);
+						if(i!=args.length-1){
+							emit("(Push)");
+						}
+					}
+					emit("(Call #\""+e[1]+"[f"+args.length+"]\" "+args.length+")");	
+					return;			
 				default:
 					return;
+
 			}
 		}
 

@@ -3,7 +3,12 @@
 kallinn ( kaffi , bull , drasl ) {
 	var strato , mygla ;
 	var party , ok ;
-	party = 1 + 2 + 3;
+	strato = 100;
+	while(strato > 10){
+		writeln "ok";
+		strato = strato - 1; 
+	};
+	party = kaffi+bull+drasl+strato;
 	return party;
 }
 main() {
@@ -13,6 +18,7 @@ main() {
 	furduleg = false;
 	boner = true;
 	counter = 0;
+
 
 	if  (kona || furduleg)
 	{
@@ -30,5 +36,7 @@ main() {
 		writeln counter;
 	};
 	writeln "fag";
+	nytt = kallinn(1, 2, 3);
+	writeln nytt;
 	return kona;
 }
