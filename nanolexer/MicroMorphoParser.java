@@ -321,7 +321,7 @@ public class MicroMorphoParser{
 					generateExpr((Object[])ifObj[0]);
 					//System.out.println("vid komumst ekki hingad");
 					emit("(GoFalse _"+ labElse +")");
-					generateBody((Object[])ifObj[1]);d
+					generateBody((Object[])ifObj[1]);
 					emit ("(Go _"+labEnd +")");
 					emit("_"+labElse+":");
 					int labTemp;
